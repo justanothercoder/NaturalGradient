@@ -9,6 +9,9 @@
 \usepackage{enumitem}
 \usepackage{graphicx}
 \usepackage{extsizes}
+
+\usepackage{minted}
+
 \usepackage[
     backend=biber%,
 %    style=authoryear-icomp,
@@ -476,5 +479,25 @@ KL-дивергенция не зависит от параметризации 
 \section{Список литературы}
 \nocite{*}
 \printbibliography[heading=none]
+\newpage
+
+\section{Приложение}
+
+Реализация натурального градиента.
+%\lstinputlisting[language=Python]{code/natgrad.py}
+\inputminted{python}{code/natgrad.py}
+\newpage
+Тест с нормальным распределением.
+%\lstinputlisting[language=Python]{code/likelihood_test.py}
+\inputminted{python}{code/likelihood_test.py}
+\newpage
+Тест с полярной системой координат.
+%\lstinputlisting[language=Python]{code/polar_test.py}
+\inputminted{python}{code/polar_test.py}
+\newpage
+Основной файл.
+%\lstinputlisting[language=Python]{code/main.py}
+\inputminted{python}{code/main.py}
+\newpage
 
 \end{document}

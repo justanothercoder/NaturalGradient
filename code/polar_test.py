@@ -51,9 +51,6 @@ def test():
     print "Iterations (natural): ", len(polar_points)
     print "Iterations (simple): ", len(polar_points_simple)
 
-#    plt.plot(polar_points[:, 0], polar_points[:, 1], color='b', label="Natural gradient", linestyle='-', marker='o')
-#    plt.plot(polar_points_simple[:, 0], polar_points_simple[:, 1], color='r', label="Simple gradient", linestyle='--', marker='o')
-
     plt.plot(polar_points[:, 0], polar_points[:, 1], color='b', label="Natural gradient", linestyle=':')
     plt.plot(polar_points_simple[:, 0], polar_points_simple[:, 1], color='r', label="Simple gradient", linestyle='--')
 

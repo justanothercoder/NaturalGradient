@@ -17,17 +17,14 @@ def natural_gradient_descent(x0, G_inv, grad, alpha, eps=0.0001, f=None, iters=N
     else:
         is_end = lambda : iter_num >= iters
 
-#    while np.sum(d**2) >= eps:
     while not is_end():
         x -= alpha * d
-        d = np.dot(G_inv(x), grad(x, iter_num))
+        d = np.dot(G_inv(x), grad(x))
 
         points.append(x.copy())
 
         if f is not None:
-            hist.append(f(x, iter_num))
-
-        print "Error: ", hist[-1]
+            hist.append(f(x))
 
         iter_num += 1
 
