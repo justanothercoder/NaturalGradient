@@ -168,6 +168,7 @@ $$f(w + \delta w) \approx f(w) + \varepsilon \nabla{f(w)}^T a$$
 Пользуясь методом множителей Лагранжа можно получить:
 $$\frac{\partial}{\partial a} (\nabla{f(w)}^Ta - \lambda a^TG(w)a) = 0$$
 
+\newpage
 Следовательно:
 $$\nabla{f(w)} = 2\lambda G(w)a$$
 $$a = \frac{1}{2 \lambda} G(w)^{-1}\nabla{f(w)}$$
@@ -252,8 +253,8 @@ $$KL(Q(z) || P(z, w)) = \mathbb{E}_q\left[\mbox{log} \frac{Q(z)}{P(z, w)}\right]
 $$ 
 \begin{aligned}
     \underset{w}{argmin} ~ KL(Q(z) || P(z, w)) 
-    = & \underset{w}{argmin} ~ \mathbb{E}_Q\left[\mbox{log} \frac{Q(z)}{P(z, w)}\right] \\
-    = & \underset{w}{argmin} ~ \mathbb{-E}_Q\left[\mbox{log} ~ P(z, w)\right] - H_q \\
+    = & \underset{w}{argmin} ~ \mathbb{E}_Q\left[\mbox{log} \frac{Q(z)}{P(z, w)}\right] = \\
+    = & \underset{w}{argmin} ~ \mathbb{-E}_Q\left[\mbox{log} ~ P(z, w)\right] - H_q = \\
     = & \underset{w}{argmin} ~ \mathbb{-E}_Q\left[\mbox{log} ~ P(z, w)\right]
 \end{aligned}
 $$ где $H_Q$ --- энтропия $Q(z)$ и не зависит от $w$. Поэтому достаточно минимизировать $L(w) = \mathbb{-E}_Q\left[\mbox{log} ~ P(z, w)\right]$.
@@ -264,42 +265,42 @@ $$ где $H_Q$ --- энтропия $Q(z)$ и не зависит от $w$. П�
 Заметим, что
 $$
 \begin{aligned}
-    & KL(P(z, w), P(z, w + \delta w)) \\
-    & = \mathbb{E} \left[ \mbox{log} ~ \frac{P(z, w)}{P(z, w + \delta w)} \right] \\
-    & = \mathbb{E} \left[ \mbox{log} ~ P(z, w) - \mbox{log} ~ P(z, w + \delta w) \right] \\
-    & \approx \mathbb{E} \left[ \mbox{log} ~ P(z, w) - \mbox{log} ~ P(z, w) - \nabla \mbox{log} ~ P(z, w)^T \delta w - \frac{1}{2} \delta w^T H\left[\mbox{log} ~ P(z, w)\right] \delta w \right] \\
-    & = \mathbb{-E} \left[ \nabla \mbox{log} ~ P(z, w)^T \delta w + \frac{1}{2} \delta w^T H\left[\mbox{log} ~ P(z, w)\right] \delta w \right] \\
+    & KL(P(z, w), P(z, w + \delta w)) = \\
+    & = \mathbb{E} \left[ \mbox{log} ~ \frac{P(z, w)}{P(z, w + \delta w)} \right] = \\
+    & = \mathbb{E} \left[ \mbox{log} ~ P(z, w) - \mbox{log} ~ P(z, w + \delta w) \right] = \\
+    & \approx \mathbb{E} \left[ \mbox{log} ~ P(z, w) - \mbox{log} ~ P(z, w) - \nabla \mbox{log} ~ P(z, w)^T \delta w - \frac{1}{2} \delta w^T H\left[\mbox{log} ~ P(z, w)\right] \delta w \right] = \\
+    & = \mathbb{-E} \left[ \nabla \mbox{log} ~ P(z, w)^T \delta w + \frac{1}{2} \delta w^T H\left[\mbox{log} ~ P(z, w)\right] \delta w \right] = \\
     & = \mathbb{-E} \left[ \nabla \mbox{log} ~ P(z, w)^T \delta w \right] - \mathbb{E} \left[ \frac{1}{2} \delta w^T H\left[\mbox{log} ~ P(z, w)\right] \delta w \right]
 \end{aligned}
 $$
 Здесь мы переходим к определению матожидания для дискретного случая:
 $$
 \begin{aligned}
-    & KL(P(z, w), P(z, w + \delta w)) \\
+    & KL(P(z, w), P(z, w + \delta w)) = \\
     & = -\sumfromto{z \in Z}{} P(z, w) \nabla \mbox{log} ~ P(z, w)^T \delta w -\frac{1}{2} \sumfromto{z \in Z}{} P(z, w) \delta w^T H\left[\mbox{log} ~ P(z, w) \right] \delta w \\
 \end{aligned}
 $$
 Рассмотрим первую сумму:
 $$
 \begin{aligned}
-    & -\sumfromto{z \in Z}{} P(z, w) \nabla \mbox{log} ~ P(z, w)^T \delta w \\
-    & = -\sumfromto{z \in Z}{} P(z, w) \frac{\nabla P(z, w)^T}{P(z, w)} \delta w \\
-    & = -\sumfromto{z \in Z}{} \nabla P(z, w)^T \delta w \\
-    & = -\nabla (\sumfromto{z \in Z}{} P(z, w))^T \delta w \\
-    & = -\nabla 1^T \delta w \\
+    & -\sumfromto{z \in Z}{} P(z, w) \nabla \mbox{log} ~ P(z, w)^T \delta w = \\
+    & = -\sumfromto{z \in Z}{} P(z, w) \frac{\nabla P(z, w)^T}{P(z, w)} \delta w = \\
+    & = -\sumfromto{z \in Z}{} \nabla P(z, w)^T \delta w = \\
+    & = -\nabla (\sumfromto{z \in Z}{} P(z, w))^T \delta w = \\
+    & = -\nabla 1^T \delta w = \\
     & = 0
 \end{aligned}
 $$
 Следовательно: 
 $$
 \begin{aligned}
-    & KL(P(z, w), P(z, w + \delta w)) \\
-    & = -\frac{1}{2} \delta w^T\sumfromto{z \in Z}{} P(z, w) H\left[\mbox{log} ~ P(z, w)\right] \delta w \\
-    & = -\frac{1}{2} \delta w^T\sumfromto{z \in Z}{} P(z, w) \frac{P(z, w) H\left[P(z, w)\right] - \nabla P(z, w)\nabla P(z, w)^T}{P(z, w)^2} \delta w \\
-    & = -\frac{1}{2} \delta w^T\sumfromto{z \in Z}{} H\left[P(z, w)\right] \delta w - \frac{1}{2} \delta w^T\sumfromto{z \in Z}{} P(z, w) \nabla \mbox{log} ~ P(z, w)\nabla \mbox{log} ~ P(z, w)^T \delta w \\
-    & = -\frac{1}{2} \delta w^TH\left[\sumfromto{z \in Z}{} P(z, w)\right] \delta w - \frac{1}{2} \delta w^T\sumfromto{z \in Z}{} P(z, w) \nabla \mbox{log} ~ P(z, w)\nabla \mbox{log} ~ P(z, w)^T \delta w \\
-    & = -\frac{1}{2} \delta w^TH\left[1\right] \delta w - \frac{1}{2} \delta w^T\sumfromto{z \in Z}{} P(z, w) \nabla \mbox{log} ~ P(z, w)\nabla \mbox{log} ~ P(z, w)^T \delta w \\
-    & = -\frac{1}{2} \delta w^T\sumfromto{z \in Z}{} P(z, w) \nabla \mbox{log} ~ P(z, w)\nabla \mbox{log} ~ P(z, w)^T \delta w \\
+    & KL(P(z, w), P(z, w + \delta w)) = \\
+    & = -\frac{1}{2} \delta w^T\sumfromto{z \in Z}{} P(z, w) H\left[\mbox{log} ~ P(z, w)\right] \delta w = \\
+    & = -\frac{1}{2} \delta w^T\sumfromto{z \in Z}{} P(z, w) \frac{P(z, w) H\left[P(z, w)\right] - \nabla P(z, w)\nabla P(z, w)^T}{P(z, w)^2} \delta w = \\
+    & = -\frac{1}{2} \delta w^T\sumfromto{z \in Z}{} H\left[P(z, w)\right] \delta w - \frac{1}{2} \delta w^T\sumfromto{z \in Z}{} P(z, w) \nabla \mbox{log} ~ P(z, w)\nabla \mbox{log} ~ P(z, w)^T \delta w = \\
+    & = -\frac{1}{2} \delta w^TH\left[\sumfromto{z \in Z}{} P(z, w)\right] \delta w - \frac{1}{2} \delta w^T\sumfromto{z \in Z}{} P(z, w) \nabla \mbox{log} ~ P(z, w)\nabla \mbox{log} ~ P(z, w)^T \delta w = \\
+    & = -\frac{1}{2} \delta w^TH\left[1\right] \delta w - \frac{1}{2} \delta w^T\sumfromto{z \in Z}{} P(z, w) \nabla \mbox{log} ~ P(z, w)\nabla \mbox{log} ~ P(z, w)^T \delta w = \\
+    & = -\frac{1}{2} \delta w^T\sumfromto{z \in Z}{} P(z, w) \nabla \mbox{log} ~ P(z, w)\nabla \mbox{log} ~ P(z, w)^T \delta w = \\
     & = \frac{1}{2} \delta w^T G(w) \delta w \\
 \end{aligned}
 $$
@@ -339,7 +340,7 @@ KL-дивергенция не зависит от параметризации 
                 \end{aligned}
             \right]
         $$
-        Несложно показать, что тут можно выразить решение аналитически, однако, ради демонстрации работы метода этот пример удобен.
+        Несложно показать, что оценку максимального правдоподобия в данном случае можно выразить аналитически, однако, для демонстрации работы метода этот пример удобен.
 
         Матрица Фишера была выражена на стр. \pageref{FisherMatrix}.
         Нужно лишь показать как вычислить ее по выборке:
@@ -363,8 +364,8 @@ KL-дивергенция не зависит от параметризации 
 
 \subsubsection{Результаты и графики}
 
-        В качестве начальных значений параметров выбирались случайные начальные значение от -100 до 100 и от 0 до 100 для среднего и дисперсии соответственно.
         Исходная выборка была сгенерирована из стандартного нормального распределения. Ее размер --- $n$ был выбран равным 1000.
+        В качестве начальных значений параметров (откуда мы начинаем идти) выбирались случайным образом в интервалах от -100 до 100 и от 0 до 100 для среднего и дисперсии соответственно.
         Параметры алгоритмов:
         $$
             \begin{aligned}
@@ -372,14 +373,14 @@ KL-дивергенция не зависит от параметризации 
                 & \varepsilon = 0.0001
             \end{aligned}
         $$
-        Зависимость ошибки от числа итераций:
+        Зависимость $-\mbox{log} ~ L(X; a, \sigma)$ от числа итераций:
         \begin{flushleft}
             \includegraphics[scale=0.8, trim=1.5cm 0 0 0]{figure_5}
         \end{flushleft}
 
         \newpage
 
-        Точки по которым проходили методы стандартного и натурального градиента:
+        Точки, по которым проходили методы стандартного и натурального градиента:
         \begin{flushleft}
             \includegraphics[scale=0.8, trim=1.5cm 0 0 0]{figure_55}
         \end{flushleft}
@@ -434,7 +435,7 @@ KL-дивергенция не зависит от параметризации 
 
         \newpage
 
-        Точки по которым проходили методы стандартного и натурального градиента:
+        Точки, по которым проходили методы стандартного и натурального градиента:
         \begin{flushleft}
             \includegraphics[scale=0.8, trim=1.5cm 0 0 0]{figure_66}
         \end{flushleft}
@@ -485,19 +486,19 @@ KL-дивергенция не зависит от параметризации 
 
 Реализация натурального градиента.
 %\lstinputlisting[language=Python]{code/natgrad.py}
-\inputminted{python}{code/natgrad.py}
+\inputminted[breaklines=true]{python}{code/natgrad.py}
 \newpage
 Тест с нормальным распределением.
 %\lstinputlisting[language=Python]{code/likelihood_test.py}
-\inputminted{python}{code/likelihood_test.py}
+\inputminted[breaklines=true]{python}{code/likelihood_test.py}
 \newpage
 Тест с полярной системой координат.
 %\lstinputlisting[language=Python]{code/polar_test.py}
-\inputminted{python}{code/polar_test.py}
+\inputminted[breaklines=true]{python}{code/polar_test.py}
 \newpage
 Основной файл.
 %\lstinputlisting[language=Python]{code/main.py}
-\inputminted{python}{code/main.py}
+\inputminted[breaklines=true]{python}{code/main.py}
 \newpage
 
 \end{document}
