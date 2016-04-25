@@ -1,0 +1,81 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.5 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \sortlist{nty}{nty}
+    \entry{Berkeley}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=e28d4ee199593959d8c29980a64f1974}{Abbeel}{A\bibinitperiod}{Pieter}{P\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{e28d4ee199593959d8c29980a64f1974}
+      \strng{fullhash}{e28d4ee199593959d8c29980a64f1974}
+      \field{sortinit}{A}
+      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{http://www.cs.berkeley.edu/~pabbeel/cs287-fa09/lecture-notes/lecture20-6pp.pdf}}
+      \field{title}{CS 287: Advanced Robotics}
+      \field{year}{2009}
+    \endentry
+    \entry{GradDescent}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=65e00e5ff0393a150e06d452578b5a57}{Roux}{R\bibinitperiod}{Nicolas\bibnamedelima Le}{N\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{65e00e5ff0393a150e06d452578b5a57}
+      \strng{fullhash}{65e00e5ff0393a150e06d452578b5a57}
+      \field{sortinit}{R}
+      \field{sortinithash}{c7387613477035a752d935acfc3e3ea2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{http://www.gatsby.ucl.ac.uk/teaching/courses/ml2-2008/graddescent.pdf}}
+      \field{title}{Using Gradient Descent for Optimization and Learning}
+      \field{year}{2009}
+    \endentry
+    \entry{AmariWorks}{article}{}
+      \name{author}{1}{}{%
+        {{hash=394adf3fb8f8273d113f3e72e281f5e8}{S.Amari}{S\bibinitperiod}{}{}{}{}{}{}}%
+      }
+      \strng{namehash}{394adf3fb8f8273d113f3e72e281f5e8}
+      \strng{fullhash}{394adf3fb8f8273d113f3e72e281f5e8}
+      \field{sortinit}{S}
+      \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Neural Computation (Volume:10 , Issue: 2 )}
+      \field{title}{Natural Gradient Works Efficiently in Learning}
+      \field{year}{1998}
+    \endentry
+    \entry{AmariWhy}{article}{}
+      \name{author}{1}{}{%
+        {{hash=bb5becfb7264581d42b3a5f3cd1a5059}{S.C.\bibnamedelimi Douglas}{S\bibinitperiod\bibinitdelim D\bibinitperiod}{S.Amari}{S\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{bb5becfb7264581d42b3a5f3cd1a5059}
+      \strng{fullhash}{bb5becfb7264581d42b3a5f3cd1a5059}
+      \field{sortinit}{S}
+      \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Acoustics, Speech and Signal Processing, 1998. Proceedings of the 1998 IEEE International Conference on (Volume:2 )}
+      \field{title}{Why natural gradient?}
+      \field{year}{1998}
+    \endentry
+  \endsortlist
+\endrefsection
+\endinput
+

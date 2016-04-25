@@ -1,0 +1,58 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{k+kn}{import} \PYGdefault{n+nn}{numpy} \PYGdefault{k+kn}{as} \PYGdefault{n+nn}{np}
+\PYGdefault{k+kn}{import} \PYGdefault{n+nn}{matplotlib.pyplot} \PYGdefault{k+kn}{as} \PYGdefault{n+nn}{plt}
+\PYGdefault{k+kn}{import} \PYGdefault{n+nn}{math}
+\PYGdefault{k+kn}{from} \PYGdefault{n+nn}{natgrad} \PYGdefault{k+kn}{import} \PYGdefault{o}{*}
+
+\PYGdefault{k}{def} \PYGdefault{n+nf}{test}\PYGdefault{p}{():}
+
+    \PYGdefault{n}{n} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{1000}
+    \PYGdefault{n}{X} \PYGdefault{o}{=} \PYGdefault{n}{np}\PYGdefault{o}{.}\PYGdefault{n}{random}\PYGdefault{o}{.}\PYGdefault{n}{randn}\PYGdefault{p}{(}\PYGdefault{n}{n}\PYGdefault{p}{)}
+
+    \PYGdefault{n}{x0} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{10} \PYGdefault{o}{*} \PYGdefault{n}{np}\PYGdefault{o}{.}\PYGdefault{n}{random}\PYGdefault{o}{.}\PYGdefault{n}{randn}\PYGdefault{p}{(}\PYGdefault{l+m+mi}{2}\PYGdefault{p}{)}
+    \PYGdefault{n}{x0}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{np}\PYGdefault{o}{.}\PYGdefault{n}{abs}\PYGdefault{p}{(}\PYGdefault{n}{x0}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{])}
+
+    \PYGdefault{k}{print} \PYGdefault{l+s}{\PYGdefaultZdq{}True mean: \PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{x0}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{]}
+    \PYGdefault{k}{print} \PYGdefault{l+s}{\PYGdefaultZdq{}True variance: \PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{x0}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{]}
+
+    \PYGdefault{k}{def} \PYGdefault{n+nf}{loglikelihood}\PYGdefault{p}{(}\PYGdefault{n}{w}\PYGdefault{p}{,} \PYGdefault{n}{k}\PYGdefault{o}{=}\PYGdefault{n+nb+bp}{None}\PYGdefault{p}{):}
+        \PYGdefault{n}{a}\PYGdefault{p}{,} \PYGdefault{n}{sigma} \PYGdefault{o}{=} \PYGdefault{n}{w}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{],} \PYGdefault{n}{w}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{]}
+        \PYGdefault{k}{return} \PYGdefault{n+nb}{sum}\PYGdefault{p}{(((}\PYGdefault{n}{x} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{a}\PYGdefault{p}{)}\PYGdefault{o}{**}\PYGdefault{l+m+mi}{2} \PYGdefault{o}{/} \PYGdefault{p}{(}\PYGdefault{l+m+mi}{2} \PYGdefault{o}{*} \PYGdefault{n}{sigma}\PYGdefault{o}{**}\PYGdefault{l+m+mi}{2}\PYGdefault{p}{)} \PYGdefault{k}{for} \PYGdefault{n}{x} \PYGdefault{o+ow}{in} \PYGdefault{n}{X}\PYGdefault{p}{))} \PYGdefault{o}{+} \PYGdefault{n}{n} \PYGdefault{o}{*} \PYGdefault{n}{np}\PYGdefault{o}{.}\PYGdefault{n}{log}\PYGdefault{p}{(}\PYGdefault{n}{sigma}\PYGdefault{p}{)} \PYGdefault{o}{+} \PYGdefault{n}{n} \PYGdefault{o}{/} \PYGdefault{l+m+mf}{2.0} \PYGdefault{o}{*} \PYGdefault{n}{np}\PYGdefault{o}{.}\PYGdefault{n}{log}\PYGdefault{p}{(}\PYGdefault{l+m+mf}{2.0} \PYGdefault{o}{*} \PYGdefault{n}{math}\PYGdefault{o}{.}\PYGdefault{n}{pi}\PYGdefault{p}{)}
+
+    \PYGdefault{k}{def} \PYGdefault{n+nf}{loglikelihood\PYGdefaultZus{}grad}\PYGdefault{p}{(}\PYGdefault{n}{w}\PYGdefault{p}{,} \PYGdefault{n}{k}\PYGdefault{o}{=}\PYGdefault{n+nb+bp}{None}\PYGdefault{p}{):}
+        \PYGdefault{n}{a}\PYGdefault{p}{,} \PYGdefault{n}{sigma} \PYGdefault{o}{=} \PYGdefault{n}{w}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{],} \PYGdefault{n}{w}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{]}
+        \PYGdefault{k}{print} \PYGdefault{l+s}{\PYGdefaultZdq{}Mean: \PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{a}\PYGdefault{p}{,} \PYGdefault{l+s}{\PYGdefaultZdq{}Variance: \PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{sigma}
+        \PYGdefault{k}{return} \PYGdefault{n}{np}\PYGdefault{o}{.}\PYGdefault{n}{array}\PYGdefault{p}{([}
+            \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mf}{1.0} \PYGdefault{o}{/} \PYGdefault{n}{sigma}\PYGdefault{o}{**}\PYGdefault{l+m+mi}{2} \PYGdefault{o}{*} \PYGdefault{n+nb}{sum}\PYGdefault{p}{((}\PYGdefault{n}{x} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{a} \PYGdefault{k}{for} \PYGdefault{n}{x} \PYGdefault{o+ow}{in} \PYGdefault{n}{X}\PYGdefault{p}{)),}
+            \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mf}{1.0} \PYGdefault{o}{/} \PYGdefault{n}{sigma}\PYGdefault{o}{**}\PYGdefault{l+m+mi}{3} \PYGdefault{o}{*} \PYGdefault{n+nb}{sum}\PYGdefault{p}{(((}\PYGdefault{n}{x} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{a}\PYGdefault{p}{)}\PYGdefault{o}{**}\PYGdefault{l+m+mi}{2} \PYGdefault{k}{for} \PYGdefault{n}{x} \PYGdefault{o+ow}{in} \PYGdefault{n}{X}\PYGdefault{p}{))} \PYGdefault{o}{+} \PYGdefault{n}{n} \PYGdefault{o}{/} \PYGdefault{n}{sigma}
+        \PYGdefault{p}{])}
+
+    \PYGdefault{k}{def} \PYGdefault{n+nf}{G}\PYGdefault{p}{(}\PYGdefault{n}{w}\PYGdefault{p}{):}
+        \PYGdefault{n}{a}\PYGdefault{p}{,} \PYGdefault{n}{sigma} \PYGdefault{o}{=} \PYGdefault{n}{w}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{],} \PYGdefault{n}{w}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{]}
+        \PYGdefault{n}{G} \PYGdefault{o}{=} \PYGdefault{n}{np}\PYGdefault{o}{.}\PYGdefault{n}{zeros}\PYGdefault{p}{((}\PYGdefault{l+m+mi}{2}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{2}\PYGdefault{p}{))}
+        \PYGdefault{k}{for} \PYGdefault{n}{x} \PYGdefault{o+ow}{in} \PYGdefault{n}{X}\PYGdefault{p}{:}
+            \PYGdefault{n}{log\PYGdefaultZus{}grad} \PYGdefault{o}{=} \PYGdefault{n}{np}\PYGdefault{o}{.}\PYGdefault{n}{array}\PYGdefault{p}{([}
+                \PYGdefault{p}{[(}\PYGdefault{n}{x} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{a}\PYGdefault{p}{)} \PYGdefault{o}{/} \PYGdefault{p}{(}\PYGdefault{l+m+mi}{2} \PYGdefault{o}{*} \PYGdefault{n}{sigma} \PYGdefault{o}{**} \PYGdefault{l+m+mi}{2}\PYGdefault{p}{)],}
+                \PYGdefault{p}{[(}\PYGdefault{n}{x} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{a}\PYGdefault{p}{)}\PYGdefault{o}{**}\PYGdefault{l+m+mi}{2} \PYGdefault{o}{/} \PYGdefault{n}{sigma} \PYGdefault{o}{**} \PYGdefault{l+m+mi}{3} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mf}{1.0} \PYGdefault{o}{/} \PYGdefault{n}{sigma}\PYGdefault{p}{]}
+            \PYGdefault{p}{])}
+            \PYGdefault{n}{G} \PYGdefault{o}{+=} \PYGdefault{n}{np}\PYGdefault{o}{.}\PYGdefault{n}{dot}\PYGdefault{p}{(}\PYGdefault{n}{log\PYGdefaultZus{}grad}\PYGdefault{p}{,} \PYGdefault{n}{log\PYGdefaultZus{}grad}\PYGdefault{o}{.}\PYGdefault{n}{T}\PYGdefault{p}{)}
+        \PYGdefault{k}{return} \PYGdefault{n}{G} \PYGdefault{o}{/} \PYGdefault{n}{n}
+
+    \PYGdefault{n}{G\PYGdefaultZus{}inv} \PYGdefault{o}{=} \PYGdefault{k}{lambda} \PYGdefault{n}{w}\PYGdefault{p}{:} \PYGdefault{n}{np}\PYGdefault{o}{.}\PYGdefault{n}{linalg}\PYGdefault{o}{.}\PYGdefault{n}{pinv}\PYGdefault{p}{(}\PYGdefault{n}{G}\PYGdefault{p}{(}\PYGdefault{n}{w}\PYGdefault{p}{))}
+
+    \PYGdefault{n}{alpha} \PYGdefault{o}{=} \PYGdefault{l+m+mf}{0.000005}
+
+    \PYGdefault{n}{x}\PYGdefault{p}{,} \PYGdefault{n}{points}\PYGdefault{p}{,} \PYGdefault{n}{hist} \PYGdefault{o}{=} \PYGdefault{n}{natural\PYGdefaultZus{}gradient\PYGdefaultZus{}descent}\PYGdefault{p}{(}\PYGdefault{n}{x0}\PYGdefault{p}{,} \PYGdefault{n}{G\PYGdefaultZus{}inv}\PYGdefault{p}{,} \PYGdefault{n}{loglikelihood\PYGdefaultZus{}grad}\PYGdefault{p}{,} \PYGdefault{n}{alpha}\PYGdefault{p}{,} \PYGdefault{n}{f}\PYGdefault{o}{=}\PYGdefault{n}{loglikelihood}\PYGdefault{p}{)}
+    \PYGdefault{n}{x\PYGdefaultZus{}simple}\PYGdefault{p}{,} \PYGdefault{n}{points\PYGdefaultZus{}simple}\PYGdefault{p}{,} \PYGdefault{n}{hist\PYGdefaultZus{}simple} \PYGdefault{o}{=} \PYGdefault{n}{simple\PYGdefaultZus{}gradient\PYGdefaultZus{}descent}\PYGdefault{p}{(}\PYGdefault{n}{x0}\PYGdefault{p}{,} \PYGdefault{n}{loglikelihood\PYGdefaultZus{}grad}\PYGdefault{p}{,} \PYGdefault{n}{alpha}\PYGdefault{p}{,} \PYGdefault{n}{f}\PYGdefault{o}{=}\PYGdefault{n}{loglikelihood}\PYGdefault{p}{)}
+
+    \PYGdefault{n}{plt}\PYGdefault{o}{.}\PYGdefault{n}{plot}\PYGdefault{p}{(}\PYGdefault{n}{hist}\PYGdefault{p}{,} \PYGdefault{n}{color}\PYGdefault{o}{=}\PYGdefault{l+s}{\PYGdefaultZsq{}b\PYGdefaultZsq{}}\PYGdefault{p}{,} \PYGdefault{n}{label}\PYGdefault{o}{=}\PYGdefault{l+s}{\PYGdefaultZdq{}Natural gradient\PYGdefaultZdq{}}\PYGdefault{p}{)}
+    \PYGdefault{n}{plt}\PYGdefault{o}{.}\PYGdefault{n}{plot}\PYGdefault{p}{(}\PYGdefault{n}{hist\PYGdefaultZus{}simple}\PYGdefault{p}{,} \PYGdefault{n}{color}\PYGdefault{o}{=}\PYGdefault{l+s}{\PYGdefaultZsq{}r\PYGdefaultZsq{}}\PYGdefault{p}{,} \PYGdefault{n}{label}\PYGdefault{o}{=}\PYGdefault{l+s}{\PYGdefaultZdq{}Simple gradient\PYGdefaultZdq{}}\PYGdefault{p}{)}
+    \PYGdefault{n}{plt}\PYGdefault{o}{.}\PYGdefault{n}{legend}\PYGdefault{p}{()}
+    \PYGdefault{n}{plt}\PYGdefault{o}{.}\PYGdefault{n}{show}\PYGdefault{p}{()}
+
+    \PYGdefault{n}{plt}\PYGdefault{o}{.}\PYGdefault{n}{plot}\PYGdefault{p}{(}\PYGdefault{n}{points}\PYGdefault{p}{[:,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{],} \PYGdefault{n}{points}\PYGdefault{p}{[:,} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{],} \PYGdefault{n}{color}\PYGdefault{o}{=}\PYGdefault{l+s}{\PYGdefaultZsq{}b\PYGdefaultZsq{}}\PYGdefault{p}{,} \PYGdefault{n}{label}\PYGdefault{o}{=}\PYGdefault{l+s}{\PYGdefaultZdq{}Natural gradient\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{linestyle}\PYGdefault{o}{=}\PYGdefault{l+s}{\PYGdefaultZdq{}:\PYGdefaultZdq{}}\PYGdefault{p}{)}
+    \PYGdefault{n}{plt}\PYGdefault{o}{.}\PYGdefault{n}{plot}\PYGdefault{p}{(}\PYGdefault{n}{points\PYGdefaultZus{}simple}\PYGdefault{p}{[:,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{],} \PYGdefault{n}{points\PYGdefaultZus{}simple}\PYGdefault{p}{[:,} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{],} \PYGdefault{n}{color}\PYGdefault{o}{=}\PYGdefault{l+s}{\PYGdefaultZsq{}r\PYGdefaultZsq{}}\PYGdefault{p}{,} \PYGdefault{n}{label}\PYGdefault{o}{=}\PYGdefault{l+s}{\PYGdefaultZdq{}Simple gradient\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{linestyle}\PYGdefault{o}{=}\PYGdefault{l+s}{\PYGdefaultZdq{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZdq{}}\PYGdefault{p}{)}
+
+    \PYGdefault{n}{plt}\PYGdefault{o}{.}\PYGdefault{n}{legend}\PYGdefault{p}{()}
+    \PYGdefault{n}{plt}\PYGdefault{o}{.}\PYGdefault{n}{show}\PYGdefault{p}{()}
+\end{Verbatim}

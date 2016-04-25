@@ -1,0 +1,15 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{k+kn}{import} \PYGdefault{n+nn}{numpy} \PYGdefault{k+kn}{as} \PYGdefault{n+nn}{np}
+\PYGdefault{k+kn}{import} \PYGdefault{n+nn}{matplotlib.pyplot} \PYGdefault{k+kn}{as} \PYGdefault{n+nn}{plt}
+\PYGdefault{k+kn}{import} \PYGdefault{n+nn}{math}
+\PYGdefault{k+kn}{import} \PYGdefault{n+nn}{seaborn}
+
+\PYGdefault{k+kn}{import} \PYGdefault{n+nn}{polar\PYGdefaultZus{}test}
+\PYGdefault{k+kn}{import} \PYGdefault{n+nn}{likelihood\PYGdefaultZus{}test}
+
+\PYGdefault{k}{def} \PYGdefault{n+nf}{main}\PYGdefault{p}{():}
+    \PYGdefault{n}{polar\PYGdefaultZus{}test}\PYGdefault{o}{.}\PYGdefault{n}{test}\PYGdefault{p}{()}
+    \PYGdefault{n}{likelihood\PYGdefaultZus{}test}\PYGdefault{o}{.}\PYGdefault{n}{test}\PYGdefault{p}{()}
+
+\PYGdefault{n}{main}\PYGdefault{p}{()}
+\end{Verbatim}
