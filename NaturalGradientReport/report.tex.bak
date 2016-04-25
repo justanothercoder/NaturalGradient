@@ -1,0 +1,285 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{amsmath, amsfonts, amssymb,  textcomp, amsthm, multicol}
+\usepackage[T1, T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english, russian]{babel}
+\usepackage[nottoc,numbib]{tocbibind}
+\usepackage{mathtext}
+\usepackage{hyperref}
+\usepackage[
+    backend=biber%,
+%    style=authoryear-icomp,
+%    sortlocale=de_DE,
+%    natbib=true,
+%    url=false, 
+%    doi=true,
+%    eprint=false
+]{biblatex}
+\addbibresource{literature.bib}
+
+\begin{document}
+\renewcommand{\sfdefault}{ptm}
+
+\newcommand{\sumfromto}[3]{\overset{#2}{\underset{#1}{\sum}}{#3}}
+
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center 
+
+
+\Large Московский государственный университет имени М.В. Ломоносова\\[1.5cm]
+\Large Факультет вычислительной математики и кибернетики\\[0.5cm]
+\large Реферат\\[0.5cm] 
+
+%\HRule \\[0.4cm]
+{ \huge \bfseries Метод натурального градиента}\\[0.4cm] % Title of your document
+%\HRule \\[1.5cm]
+
+\begin{flushright} \large
+\Large \emph{Исполнитель:}\\
+Виктор Януш\\[3cm] 
+\end{flushright}
+
+\vfill 
+
+{\large Москва 2016 год}\\[3cm]
+%{\large \today}\\[3cm] % Date, change the \today to a set date if you want to be precise
+
+\end{titlepage}
+
+%\maketitle
+ 
+\tableofcontents
+\newpage
+
+%\addcontentsline{toc}{section}{Unnumbered Section}
+ 
+\section{Введение}
+
+Метод градиентного спуска является часто используемым методом оптимизации функций стоимости,
+однако он не всегда сходится быстро и зависит от того пространства, в котором находятся параметры
+оптимизируемой функции. В этом реферате рассматривается метод натурального градиента, который иногда 
+позволяет обойти эти ограничения, используя внутреннюю риманову структуру пространства параметров. 
+В частности, для задачи оптимизации функции максимального правдоподобия метод натурального градиента 
+является асимптотически эффективным по Фишеру.
+
+\newpage 
+
+\section{Градиентный спуск}
+Предположим, что перед нами стоит задача минимизировать некоторую функцию $f(x) : \mathbb{R}^{n} \rightarrow \mathbb{R}$. \\
+Рассмотрим линейное приближение $f(x + d)$ при достаточно маленьком $||d||$:
+$$f(x + d) \approx f(x) + \nabla{f(x)}^{T}d$$
+Пусть $d = \alpha \widetilde{d}, где ||\widetilde{d}|| = 1, \alpha > 0$.  \\ 
+Ясно, что:
+$$\underset{\widetilde{d}}{argmin} f(x + d) = 
+\underset{\widetilde{d}}{argmin} (f(x) + \alpha \nabla{f(x)}^{T}\widetilde{d}) = 
+\underset{\widetilde{d}}{argmin} \nabla{f(x)}^{T}\widetilde{d} = 
+-\frac{\nabla{f(x)}}{||\nabla{f(x)}||}$$
+
+\noindent Таким образом,  направлением наиболее крутого спуска является:
+$$\widetilde{d} = -\frac{\nabla{f(x)}}{||\nabla{f(x)}||}$$
+Приходим к следующему алгоритму градиентного спуска:
+\begin{enumerate}
+    \item Выбираем $x_0, $ инициализируем $k \leftarrow 0$
+    \item $d_k = -\nabla{f(x_k)}$.
+    \item Если $||d_k|| < \epsilon$, то выход.
+    \item $x_{k+1} \leftarrow x_{k} + \alpha_k d_k, k \leftarrow k + 1$. Переход к шагу 2. 
+\end{enumerate}
+
+Проблема этого метода заключается в том, что он зависит от системы координат. К примеру, если
+мы перейдем к $y: x = Ay$, то получится следующая формула: \\
+$y_{k+1} = y_{k} - \alpha_k \nabla_y{f(Ay)} = y_{k} - \alpha_k A^T \nabla_x{f(Ay)}$ \\
+$Ay_{k+1} = Ay_{k} - \alpha_k AA^T \nabla_x{f(Ay)}$ \\
+Проблема в том, что $Ay_{k+1} \neq x_{k+1}$ \\
+
+Отсюда следует, что, вообще говоря, скорость сходимости метода может зависеть от системы координат. \\
+
+\newpage
+
+
+\section{Метод Ньютона}
+Пусть перед нами стоит задача минимизировать некоторую функцию $f(x) : \mathbb{R}^{n} \rightarrow \mathbb{R}$. \\
+Попробуем приблизить функцию $f(x)$ квадратичной формой и рассмотрим на этот раз разложение функции f до второго члена в ряд Тейлора:
+$$f(x + d) \approx f(x) + \nabla{f(x)}^Td + \frac{1}{2}d^TH(x)d$$
+где H - гессиан f(x).
+
+В точке минимума должно выполняться равенство $\nabla{f(x+d)} = 0$, следовательно:
+$$\nabla{f(x + d)} = \nabla{f(x)} + H(x)d = 0$$
+$$d = -H(x)^{-1}\nabla{f(x)}$$
+
+\noindentПриходим к следующему алгоритму:
+\begin{enumerate}
+    \item Выбираем $x_0, $ инициализируем $k \leftarrow 0$
+    \item $d_k = -H(x_k)^{-1}\nabla{f(x_k)}$.
+    \item Если $||d_k|| < \epsilon$, то выход.
+    \item $x_{k+1} \leftarrow x_{k} + \alpha_k d_k, k \leftarrow k + 1$. Переход к шагу 2. 
+\end{enumerate}
+
+Если мы снова рассмотрим $y: x = Ay$, то получим: \\
+$H(y) = A^TH(x)A$ \\
+$\nabla_y{f(Ay)} = A^T \nabla_x{f(Ay)}$
+Следовательно, $d = -(A^TH(x)A)^{-1} A^T \nabla_x{f(Ay)} = A^{-1}H(x)^{-1} \nabla_x{f(Ay)} $ \\
+Таким образом, $Ay_{k+1} = Ay_{k} + \alpha_k AA^{-1}H(x)^{-1} \nabla_x{f(Ay_k)} = x_{k+1}$ \\
+
+Значит, этот метод не меняется при аффинных преобразованиях координат, но не при общих. \\
+
+\newpage
+
+\section{Метод натурального градиента}
+\subsection{Описание метода}
+
+Предположим, что мы имеем параметры $w = (w_1, w_2, ..., w_n)$. В обычном случае Евклидова пространства для расстояния имеет место следующее соотношение:
+$$d(w, w+\delta w) = \sqrt{\sumfromto{i = 1}{n}{\delta w_i}^2}$$
+Однако, такое расстояние не всегда имеет смысл расстояние. Hапример, для расстояния на сфере или какой-нибудь другой поверхности с кривизной.
+
+Допустим, что расстояние в пространстве задается следующим образом:
+$$d(w, w+\delta w) = \sqrt{\sumfromto{i = 1}{n}{\sumfromto{j = 1}{n}{g_{ij}(w) \delta w_i \delta w_j}}} = \sqrt{\delta w^T G(w) \delta w}$$
+где $G(w)$ - метрический тензор Римана. $G(w) > 0$. Пространство с таким расстоянием - Риманово пространство.
+
+Заметим, что если $g_{ij} = \delta_{ij} = \left\{ \begin{aligned} 1, i = j \\ 0, i \neq j \end{aligned} \right.$, то $G(w) = I$, и мы получаем обычный евклидовый ортонормальный случай. \\
+
+Предположим, что перед нами стоит задача минимизировать некоторую функцию $f(x) : \mathbb{R}^{n} \rightarrow \mathbb{R}$.
+Как делать градиентный спуск в таком случае?
+Рассмотрим разложением по формуле Тейлора до первого порядка:
+$$f(w + \delta w) \approx f(w) + \nabla{f(w)}^T {\delta w}$$
+
+Пусть $\delta w = \epsilon a$, где $||a||^2 = a^TG(w)a = 1$, тогда:
+$$f(w + \delta w) \approx f(w) + \epsilon \nabla{f(w)}^T a$$
+
+Пользуясь методом множителей Лагранжа можно получить:
+$$\frac{\partial}{\partial a} (\nabla{f(w)}^Ta - \lambda a^TG(w)a) = 0$$
+
+Следовательно:
+$$\nabla{f(w)} = 2\lambda G(w)a$$
+$$a = \frac{1}{2 \lambda} G(w)^{-1}\nabla{f(w)}$$
+
+$\lambda$ находится из условия нормировки.
+Получаем, что $-G(w)^{-1}\nabla{f(w)}$ является направлением наиболее крутого спуска в пространстве с Римановой метрикой.
+
+\noindentПриходим к следующему алгоритму:
+\begin{enumerate}
+    \item Выбираем $x_0, $ инициализируем $k \leftarrow 0$
+    \item $d_k = -G(x_k)^{-1}\nabla{f(x_k)}$.
+    \item Если $||d_k|| < \epsilon$, то выход.
+    \item $x_{k+1} \leftarrow x_{k} + \alpha_k d_k, k \leftarrow k + 1$. Переход к шагу 2. 
+\end{enumerate}
+
+\newpage
+
+\subsection{Примеры}
+\subsubsection{Полярная система координат}
+Рассмотрим полярную систему координат на плоскости. \\
+$$ x = r cos \phi $$
+$$ y = r sin \phi $$
+Предположим, что вектор $w$ получается из $v$ переходом к другим координатам:
+$$ v = v(x, y) $$
+$$ w = w(r, \phi) $$
+Должно выполняться равенство $d(w, w + \delta w)^2 = d(v, v + \delta v)^2$.
+$$d(v, v + \delta v) = \sqrt{{\delta x}^2 + {\delta y}^2}$$
+$$
+\begin{aligned}
+w + \delta w  
+    = & \begin{bmatrix} 
+        (r + \delta r) cos (\phi + \delta \phi) \\
+        (r + \delta r) sin (\phi + \delta \phi) 
+    \end{bmatrix} \\
+    =   & \begin{bmatrix}
+        r cos \phi + \delta r ~ cos \phi - \delta \phi ~ r sin \phi \\
+        r sin \phi + \delta r ~ sin \phi + \delta \phi ~ r cos \phi
+    \end{bmatrix}
+\end{aligned}
+$$
+$$
+\delta w = 
+\left[ 
+    \begin{aligned} 
+        \delta r ~ cos \phi - \delta \phi ~ r sin \phi \\
+        \delta r ~ sin \phi + \delta \phi ~ r cos \phi
+    \end{aligned}
+\right]
+$$
+Здесь членами вида $\delta r \delta \phi^n$ и $\delta \phi^{n+1}$ можно пренебречь. \\
+Отсюда: 
+$$d(w, w + \delta w)^2 = \delta r^2 + r^2 \delta \phi^2 = \delta w^TG(w)\delta w$$
+где
+$$
+G(w) = 
+\begin{bmatrix}
+    1 & 0 \\
+    0 & r^2
+\end{bmatrix}
+$$
+В данном случае получилось, что $G(w)$ не зависит от $w$, однако это не всегда так.
+
+\newpage
+
+\subsubsection{Статистическая оценка функции вероятности}
+
+Предположим, что есть неизвестное распределение с функцией вероятности $Q(z)$ и мы пытаемся приблизить ее с помощью
+функции $P(z, w)$, где $w = (w_1, w_2, ..., w_n)$ - параметр.
+
+Часто в качестве расстояния между двумя распределениями рассматривают дивергенцию Кулльбака-Лейблера:
+$$KL(Q(z) || P(z, w)) = \mathbb{E}_q\left[\mbox{log} \frac{Q(z)}{P(z, w)}\right] $$
+Оптимальный параметр $\hat{w}$ характеризуется тем, что $Q(z) = P(x, \hat{w})$. При нем достигается минимум KL-дивергенции.
+
+Ясно, что
+$$ 
+\begin{aligned}
+    \underset{w}{argmin} ~ KL(Q(z) || P(z, w)) 
+    = & \underset{w}{argmin} ~ \mathbb{E}_q\left[\mbox{log} \frac{Q(z)}{P(z, w)}\right] \\
+    = & \underset{w}{argmin} ~ \mathbb{-E}_q\left[\mbox{log} ~ P(z, w)\right] - H_q \\
+    = & \underset{w}{argmin} ~ \mathbb{-E}_q\left[\mbox{log} ~ P(z, w)\right]
+\end{aligned}
+$$ где $H_q$ - энтропия $Q(z)$ и не зависит от $w$. Поэтому достаточно минимизировать $L(w) = \mathbb{-E}_q\left[\mbox{log} ~ P(z, w)\right]$.
+
+Как минимизировать данную функцию с помощью метода натурального градиента? Необходимо найти метрический тензор Римана.
+
+Обозначим $H\left[f(x)\right]$ - гессиан $f(x)$. \\
+Заметим, что
+$$
+\begin{aligned}
+    & KL(P(z, w), P(z, w + \delta w)) \\
+    & = \mathbb{E} \left[ \mbox{log} ~ \frac{P(z, w)}{P(z, w + \delta w)} \right] \\
+    & = \mathbb{E} \left[ \mbox{log} ~ P(z, w) - \mbox{log} ~ P(z, w + \delta w) \right] \\
+    & \approx \mathbb{E} \left[ \mbox{log} ~ P(z, w) - \mbox{log} ~ P(z, w) - \nabla \mbox{log} ~ P(z, w)^T \delta w - \frac{1}{2} \delta w^T H\left[\mbox{log} ~ P(z, w)\right] \delta w \right] \\
+    & = \mathbb{-E} \left[ \nabla \mbox{log} ~ P(z, w)^T \delta w + \frac{1}{2} \delta w^T H\left[\mbox{log} ~ P(z, w)\right] \delta w \right] \\
+    & = -\sumfromto{z \in Z}{} P(z, w)\left[ \nabla \mbox{log} ~ P(z, w)^T \delta w + \frac{1}{2} \delta w^T H\left[\mbox{log} ~ P(z, w)\right] \delta w \right] \\
+    & = -\sumfromto{z \in Z}{} P(z, w)\left[ \frac{\nabla P(z, w)^T}{P(z, w)} \delta w + \frac{1}{2} \delta w^T H\left[\mbox{log} ~ P(z, w)\right] \delta w \right] \\
+    & = -\sumfromto{z \in Z}{} \nabla P(z, w)^T \delta w - \sumfromto{z \in Z}{} P(z, w)\frac{1}{2} \delta w^T H\left[\mbox{log} ~ P(z, w)\right] \delta w \\
+    & = -\nabla (\sumfromto{z \in Z}{} P(z, w))^T \delta w - \frac{1}{2} \delta w^T\sumfromto{z \in Z}{} P(z, w) H\left[\mbox{log} P(z, w)\right] \delta w \\
+    & = -\nabla 1^T \delta w - \frac{1}{2} \delta w^T\sumfromto{z \in Z}{} P(z, w) H\left[\mbox{log} ~ P(z, w)\right] \delta w \\
+    & = -\frac{1}{2} \delta w^T\sumfromto{z \in Z}{} P(z, w) H\left[\mbox{log} ~ P(z, w)\right] \delta w \\
+    & = -\frac{1}{2} \delta w^T\sumfromto{z \in Z}{} P(z, w) \frac{P(z, w) H\left[P(z, w)\right] - \nabla P(z, w)\nabla P(z, w)^T}{P(z, w)^2} \delta w \\
+    & = -\frac{1}{2} \delta w^T\sumfromto{z \in Z}{} H\left[P(z, w)\right] \delta w - \frac{1}{2} \delta w^T\sumfromto{z \in Z}{} P(z, w) \nabla \mbox{log} ~ P(z, w)\nabla \mbox{log} ~ P(z, w)^T \delta w \\
+    & = -\frac{1}{2} \delta w^TH\left[\sumfromto{z \in Z}{} P(z, w)\right] \delta w - \frac{1}{2} \delta w^T\sumfromto{z \in Z}{} P(z, w) \nabla \mbox{log} ~ P(z, w)\nabla \mbox{log} ~ P(z, w)^T \delta w \\
+    & = -\frac{1}{2} \delta w^TH\left[1\right] \delta w - \frac{1}{2} \delta w^T\sumfromto{z \in Z}{} P(z, w) \nabla \mbox{log} ~ P(z, w)\nabla \mbox{log} ~ P(z, w)^T \delta w \\
+    & = -\frac{1}{2} \delta w^T\sumfromto{z \in Z}{} P(z, w) \nabla \mbox{log} ~ P(z, w)\nabla \mbox{log} ~ P(z, w)^T \delta w \\
+    & = \frac{1}{2} \delta w^T G(w) \delta w \\
+\end{aligned}
+$$
+
+Где $G(w)$ --- матрица информации Фишера.
+$$g_{ij}(w) = -\sumfromto{z \in Z}{}{\frac{\partial}{\partial w_i}\left[ \mbox{log} P(z, w)\right] \frac{\partial}{\partial w_j}\left[ \mbox{log} P(z, w)\right]}$$
+
+Таким образом, мы научились методом натурального градиента приближать заданное распределение.
+
+\emph{Замечание:}
+Аналогичные рассуждения верны и в случае, когда мы пытаемся приблизить функцию плотности, при условии законности данных преобразований.
+
+\newpage
+
+\section{Cравнение трех методов}
+
+\newpage
+ 
+\section{Заключение}
+Заключение 
+\newpage 
+
+\section{Список литературы}
+\nocite{*}
+\printbibliography[heading=none]
+
+\end{document}

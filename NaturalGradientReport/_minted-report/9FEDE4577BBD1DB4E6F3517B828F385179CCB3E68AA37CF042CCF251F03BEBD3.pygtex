@@ -1,0 +1,39 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{k+kn}{import} \PYGdefault{n+nn}{numpy} \PYGdefault{k+kn}{as} \PYGdefault{n+nn}{np}
+
+\PYGdefault{k}{def} \PYGdefault{n+nf}{natural\PYGdefaultZus{}gradient\PYGdefaultZus{}descent}\PYGdefault{p}{(}\PYGdefault{n}{x0}\PYGdefault{p}{,} \PYGdefault{n}{G\PYGdefaultZus{}inv}\PYGdefault{p}{,} \PYGdefault{n}{grad}\PYGdefault{p}{,} \PYGdefault{n}{alpha}\PYGdefault{p}{,} \PYGdefault{n}{eps}\PYGdefault{o}{=}\PYGdefault{l+m+mf}{0.0001}\PYGdefault{p}{,} \PYGdefault{n}{f}\PYGdefault{o}{=}\PYGdefault{n+nb+bp}{None}\PYGdefault{p}{,} \PYGdefault{n}{iters}\PYGdefault{o}{=}\PYGdefault{n+nb+bp}{None}\PYGdefault{p}{):}
+    \PYGdefault{n}{x} \PYGdefault{o}{=} \PYGdefault{n}{x0}\PYGdefault{o}{.}\PYGdefault{n}{copy}\PYGdefault{p}{()}
+    \PYGdefault{n}{d} \PYGdefault{o}{=} \PYGdefault{n}{np}\PYGdefault{o}{.}\PYGdefault{n}{dot}\PYGdefault{p}{(}\PYGdefault{n}{G\PYGdefaultZus{}inv}\PYGdefault{p}{(}\PYGdefault{n}{x}\PYGdefault{p}{),} \PYGdefault{n}{grad}\PYGdefault{p}{(}\PYGdefault{n}{x}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{))}
+
+    \PYGdefault{n}{points} \PYGdefault{o}{=} \PYGdefault{p}{[}\PYGdefault{n}{x}\PYGdefault{o}{.}\PYGdefault{n}{copy}\PYGdefault{p}{()]}
+
+    \PYGdefault{n}{hist} \PYGdefault{o}{=} \PYGdefault{n+nb+bp}{None}
+    \PYGdefault{k}{if} \PYGdefault{n}{f} \PYGdefault{o+ow}{is} \PYGdefault{o+ow}{not} \PYGdefault{n+nb+bp}{None}\PYGdefault{p}{:}
+        \PYGdefault{n}{hist} \PYGdefault{o}{=} \PYGdefault{p}{[}\PYGdefault{n}{f}\PYGdefault{p}{(}\PYGdefault{n}{x}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)]}
+    
+    \PYGdefault{n}{iter\PYGdefaultZus{}num} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{1}
+
+    \PYGdefault{k}{if} \PYGdefault{n}{iters} \PYGdefault{o+ow}{is} \PYGdefault{n+nb+bp}{None}\PYGdefault{p}{:}
+        \PYGdefault{n}{is\PYGdefaultZus{}end} \PYGdefault{o}{=} \PYGdefault{k}{lambda} \PYGdefault{p}{:} \PYGdefault{n}{np}\PYGdefault{o}{.}\PYGdefault{n}{sum}\PYGdefault{p}{(}\PYGdefault{n}{d}\PYGdefault{o}{**}\PYGdefault{l+m+mi}{2}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{eps}
+    \PYGdefault{k}{else}\PYGdefault{p}{:}
+        \PYGdefault{n}{is\PYGdefaultZus{}end} \PYGdefault{o}{=} \PYGdefault{k}{lambda} \PYGdefault{p}{:} \PYGdefault{n}{iter\PYGdefaultZus{}num} \PYGdefault{o}{\PYGdefaultZgt{}=} \PYGdefault{n}{iters}
+
+    \PYGdefault{k}{while} \PYGdefault{o+ow}{not} \PYGdefault{n}{is\PYGdefaultZus{}end}\PYGdefault{p}{():}
+        \PYGdefault{n}{x} \PYGdefault{o}{\PYGdefaultZhy{}=} \PYGdefault{n}{alpha} \PYGdefault{o}{*} \PYGdefault{n}{d}
+        \PYGdefault{n}{d} \PYGdefault{o}{=} \PYGdefault{n}{np}\PYGdefault{o}{.}\PYGdefault{n}{dot}\PYGdefault{p}{(}\PYGdefault{n}{G\PYGdefaultZus{}inv}\PYGdefault{p}{(}\PYGdefault{n}{x}\PYGdefault{p}{),} \PYGdefault{n}{grad}\PYGdefault{p}{(}\PYGdefault{n}{x}\PYGdefault{p}{))}
+
+        \PYGdefault{n}{points}\PYGdefault{o}{.}\PYGdefault{n}{append}\PYGdefault{p}{(}\PYGdefault{n}{x}\PYGdefault{o}{.}\PYGdefault{n}{copy}\PYGdefault{p}{())}
+
+        \PYGdefault{k}{if} \PYGdefault{n}{f} \PYGdefault{o+ow}{is} \PYGdefault{o+ow}{not} \PYGdefault{n+nb+bp}{None}\PYGdefault{p}{:}
+            \PYGdefault{n}{hist}\PYGdefault{o}{.}\PYGdefault{n}{append}\PYGdefault{p}{(}\PYGdefault{n}{f}\PYGdefault{p}{(}\PYGdefault{n}{x}\PYGdefault{p}{))}
+
+        \PYGdefault{n}{iter\PYGdefaultZus{}num} \PYGdefault{o}{+=} \PYGdefault{l+m+mi}{1}
+
+    \PYGdefault{n}{points} \PYGdefault{o}{=} \PYGdefault{n}{np}\PYGdefault{o}{.}\PYGdefault{n}{array}\PYGdefault{p}{(}\PYGdefault{n}{points}\PYGdefault{p}{)}
+    \PYGdefault{k}{if} \PYGdefault{n}{f} \PYGdefault{o+ow}{is} \PYGdefault{o+ow}{not} \PYGdefault{n+nb+bp}{None}\PYGdefault{p}{:}
+        \PYGdefault{k}{return} \PYGdefault{n}{x}\PYGdefault{p}{,} \PYGdefault{n}{points}\PYGdefault{p}{,} \PYGdefault{n}{hist}
+    \PYGdefault{k}{return} \PYGdefault{n}{x}\PYGdefault{p}{,} \PYGdefault{n}{points}
+
+\PYGdefault{k}{def} \PYGdefault{n+nf}{simple\PYGdefaultZus{}gradient\PYGdefaultZus{}descent}\PYGdefault{p}{(}\PYGdefault{n}{x0}\PYGdefault{p}{,} \PYGdefault{n}{grad}\PYGdefault{p}{,} \PYGdefault{n}{alpha}\PYGdefault{p}{,} \PYGdefault{n}{eps}\PYGdefault{o}{=}\PYGdefault{l+m+mf}{0.0001}\PYGdefault{p}{,} \PYGdefault{n}{f}\PYGdefault{o}{=}\PYGdefault{n+nb+bp}{None}\PYGdefault{p}{,} \PYGdefault{n}{iters}\PYGdefault{o}{=}\PYGdefault{n+nb+bp}{None}\PYGdefault{p}{):}
+    \PYGdefault{k}{return} \PYGdefault{n}{natural\PYGdefaultZus{}gradient\PYGdefaultZus{}descent}\PYGdefault{p}{(}\PYGdefault{n}{x0}\PYGdefault{p}{,} \PYGdefault{k}{lambda} \PYGdefault{n}{x}\PYGdefault{p}{:} \PYGdefault{n}{np}\PYGdefault{o}{.}\PYGdefault{n}{eye}\PYGdefault{p}{(}\PYGdefault{n}{x0}\PYGdefault{o}{.}\PYGdefault{n}{shape}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{]),} \PYGdefault{n}{grad}\PYGdefault{p}{,} \PYGdefault{n}{alpha}\PYGdefault{p}{,} \PYGdefault{n}{eps}\PYGdefault{p}{,} \PYGdefault{n}{f}\PYGdefault{p}{,} \PYGdefault{n}{iters}\PYGdefault{p}{)}
+\end{Verbatim}

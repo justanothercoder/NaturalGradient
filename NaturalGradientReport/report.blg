@@ -1,0 +1,14 @@
+[0] Config.pm:325> INFO - This is Biber 2.1
+[0] Config.pm:328> INFO - Logfile is 'report.blg'
+[71] biber:276> INFO - === Ð¡Ð±. Ð°Ð¿Ñ. 23, 2016, 09:07:42
+[72] Biber.pm:334> INFO - Reading 'report.bcf'
+[198] Biber.pm:643> INFO - Using all citekeys in bib section 0
+[356] Biber.pm:2978> INFO - Processing section 0
+[741] Biber.pm:3116> INFO - Looking for bibtex format file 'literature.bib' for section 0
+[759] bibtex.pm:1010> INFO - Decoding LaTeX character macros into UTF-8
+[763] bibtex.pm:884> INFO - Found BibTeX data source 'literature.bib'
+[911] UCollate.pm:66> INFO - Overriding locale 'ru-RU' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[911] UCollate.pm:66> INFO - Overriding locale 'ru-RU' defaults 'variable = shifted' with 'variable = non-ignorable'
+[911] Biber.pm:2855> INFO - Sorting list 'nty' of type 'entry' with scheme 'nty' and locale 'ru-RU'
+[919] bbl.pm:505> INFO - Writing 'report.bbl' with encoding 'UTF-8'
+[920] bbl.pm:596> INFO - Output to report.bbl
