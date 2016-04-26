@@ -28,7 +28,6 @@ def load_dataset():
             download(filename)
         with gzip.open(filename, 'rb') as f:
             data = np.frombuffer(f.read(), np.uint8, offset=16)
-#        data = data.reshape(-1, 1, 28, 28)
         data = data.reshape(-1, 784)
         return data / np.float32(256)
 
