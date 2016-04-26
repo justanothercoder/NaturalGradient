@@ -76,6 +76,7 @@ def main():
     
         np.savez('model_%s.npz' % model, *lasagne.layers.get_all_param_values(network))
 
+    plt.title('Validation error/epoch')    
     plt.legend()
     plt.show()
         
