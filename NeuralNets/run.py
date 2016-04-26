@@ -65,21 +65,43 @@ def main():
 
     network = build(input_var, n_hidden=300)
 
-    with np.load('model.npz') as f:
-        param_values = [f['arr_%d' % i] for i in range(len(f.files))]
-        lasagne.layers.set_all_param_values(network, param_values)
-
-    test_prediction = lasagne.layers.get_output(network, deterministic=True)
-#    run_fn = theano.function([input_var], test_prediction)
+    methods = ['adam', 'momentum', 'nesterov_momentum', 'adagrad', 'rmsprop']
 
     n_images = 10
-    for i in range(n_images):
-        plt.subplot(n_images, 2, 2 * i + 1)
-        plt.axis('off')
-        plt.imshow(X_train[i].reshape(28, 28), cmap='Greys')
-        plt.subplot(n_images, 2, 2 * i + 2)
-        plt.axis('off')
-        plt.imshow(lasagne.layers.get_output(network, X_train[i]).eval().reshape(28, 28), cmap='Greys')
+    
+    for j in range(n_images):
+        plt.subplot(len(methods) + 1, n_images, j + 1)
+        #plt.axis('off')
+        plt.xticks([])
+        plt.yticks([])
+        if j == 0:
+            plt.ylabel('original', rotation='horizontal')
+        plt.imshow(X_train[j].reshape(28, 28), cmap='Greys')
+
+    for i, model in enumerate(methods):
+        with np.load('model_%s.npz' % model) as f:
+            param_values = [f['arr_%d' % j] for j in range(len(f.files))]
+            lasagne.layers.set_all_param_values(network, param_values)
+
+        test_prediction = lasagne.layers.get_output(network, deterministic=True)
+
+        for j in range(n_images):
+            plt.subplot(len(methods) + 1, n_images, n_images * (i+1) + j + 1)
+            #plt.axis('off')
+            plt.xticks([])
+            plt.yticks([])
+            if j == 0:
+                plt.ylabel(model, rotation='horizontal')
+            plt.imshow(lasagne.layers.get_output(network, X_train[j]).eval().reshape(28, 28), cmap='Greys')
+
+#    n_images = 10
+#    for i in range(n_images):
+#        plt.subplot(n_images, 2, 2 * i + 1)
+#        plt.axis('off')
+#        plt.imshow(X_train[i].reshape(28, 28), cmap='Greys')
+#        plt.subplot(n_images, 2, 2 * i + 2)
+#        plt.axis('off')
+#        plt.imshow(lasagne.layers.get_output(network, X_train[i]).eval().reshape(28, 28), cmap='Greys')
     
     plt.show()
 
