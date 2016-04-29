@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import seaborn
 
 from neuralnet import get_network_stats
+from custom_updates import custom_momentum_chlr
 
 def load_dataset():
     if sys.version_info[0] == 2:
@@ -54,17 +55,32 @@ def main():
     print("Loading data...")
     X_train, y_train, X_val, y_val, X_test, y_test = load_dataset()
 
-    n_epochs = 100
+    n_epochs = 10
     n_hidden = 300
 
     objective = lasagne.objectives.binary_crossentropy
 
     models = {
-        'adam': (lasagne.updates.adam, {'learning_rate': 0.01}),
-        'momentum': (lasagne.updates.momentum, {'learning_rate': 0.01, 'momentum': 0.9}),
-        'nesterov_momentum': (lasagne.updates.nesterov_momentum, {'learning_rate': 0.01, 'momentum': 0.9}),
-        'adagrad': (lasagne.updates.adagrad, {'learning_rate': 0.01}),
-        'rmsprop': (lasagne.updates.rmsprop, {'learning_rate': 0.01, 'rho': 0.9})
+#        'adam': (lasagne.updates.adam, {'learning_rate': 0.01}),
+#        'momentum': (lasagne.updates.momentum, {'learning_rate': 0.01, 'momentum': 0.9}),
+#        'nesterov_momentum': (lasagne.updates.nesterov_momentum, {'learning_rate': 0.01, 'momentum': 0.9}),
+#        'adagrad': (lasagne.updates.adagrad, {'learning_rate': 0.01}),
+#        'rmsprop': (lasagne.updates.rmsprop, {'learning_rate': 0.01, 'rho': 0.9})
+
+#        'custom_momentum-1.0-0.9': (custom_momentum, {'learning_rate': 1.0, 'momentum': 0.9}),
+#        'custom_momentum-0.1-0.9': (custom_momentum, {'learning_rate': 0.1, 'momentum': 0.9}),
+#        'custom_momentum-0.01-0.9': (custom_momentum, {'learning_rate': 0.01, 'momentum': 0.9}),
+#        'custom_momentum-0.001-0.9': (custom_momentum, {'learning_rate': 0.001, 'momentum': 0.9}),
+#        'custom_momentum-0.1-0.5': (custom_momentum, {'learning_rate': 0.1, 'momentum': 0.5}),
+#        'custom_momentum-0.1-0.1': (custom_momentum, {'learning_rate': 0.1, 'momentum': 0.1})
+
+#        'custom_momentum-1.0divk**1.0-0.9': (custom_momentum_chlr, {'learning_rate': 1.0, 'momentum': 0.9, 'tau': 1.0}),
+#        'custom_momentum-1.0divk**0.75-0.9': (custom_momentum_chlr, {'learning_rate': 1.0, 'momentum': 0.9, 'tau': 0.75}),
+#        'custom_momentum-1.0divk**0.5-0.9': (custom_momentum_chlr, {'learning_rate': 1.0, 'momentum': 0.9, 'tau': 0.5}),
+
+        'custom_momentum-1.0divk**1.0-0.9': (custom_momentum_chlr, {'learning_rate': 1.0, 'momentum': 0.0, 'tau': 1.0}),
+        'custom_momentum-1.0divk**0.75-0.9': (custom_momentum_chlr, {'learning_rate': 1.0, 'momentum': 0.0, 'tau': 0.75}),
+        'custom_momentum-1.0divk**0.5-0.9': (custom_momentum_chlr, {'learning_rate': 1.0, 'momentum': 0.0, 'tau': 0.5}),
     }
 
     for model in models.keys():
@@ -73,7 +89,8 @@ def main():
 
         plt.plot(val_err, label=model)
     
-        np.savez('model_%s.npz' % model, *lasagne.layers.get_all_param_values(network))
+#        np.savez('model_%s.npz' % model, *lasagne.layers.get_all_param_values(network))
+#        np.savez('model_%s_val_error.npz' % model, val_err)
 
     plt.title('Validation error/epoch')    
     plt.legend()

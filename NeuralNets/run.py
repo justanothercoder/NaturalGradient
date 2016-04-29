@@ -65,7 +65,7 @@ def main():
 
     network = build(input_var, n_hidden=300)
 
-    methods = ['adam', 'momentum', 'nesterov_momentum', 'adagrad', 'rmsprop']
+    methods = ['adam', 'momentum', 'nesterov_momentum', 'adagrad', 'rmsprop', 'custom_momentum']
 
     n_images = 10
     
