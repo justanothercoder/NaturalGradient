@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import seaborn
 
 from neuralnet import get_network_stats
-from custom_updates import custom_momentum_chlr
+from custom_updates import *
 
 def load_dataset():
     if sys.version_info[0] == 2:
@@ -55,7 +55,7 @@ def main():
     print("Loading data...")
     X_train, y_train, X_val, y_val, X_test, y_test = load_dataset()
 
-    n_epochs = 10
+    n_epochs = 100
     n_hidden = 300
 
     objective = lasagne.objectives.binary_crossentropy
@@ -74,13 +74,37 @@ def main():
 #        'custom_momentum-0.1-0.5': (custom_momentum, {'learning_rate': 0.1, 'momentum': 0.5}),
 #        'custom_momentum-0.1-0.1': (custom_momentum, {'learning_rate': 0.1, 'momentum': 0.1})
 
-#        'custom_momentum-1.0divk**1.0-0.9': (custom_momentum_chlr, {'learning_rate': 1.0, 'momentum': 0.9, 'tau': 1.0}),
-#        'custom_momentum-1.0divk**0.75-0.9': (custom_momentum_chlr, {'learning_rate': 1.0, 'momentum': 0.9, 'tau': 0.75}),
-#        'custom_momentum-1.0divk**0.5-0.9': (custom_momentum_chlr, {'learning_rate': 1.0, 'momentum': 0.9, 'tau': 0.5}),
+#        'custom_momentum-1.0divk**1.0-0.9': (custom_momentum, {'learning_rate': 1.0, 'momentum': 0.9, 'tau': 1.0}),
+#        'custom_momentum-1.0divk**0.75-0.9': (custom_momentum, {'learning_rate': 1.0, 'momentum': 0.9, 'tau': 0.75}),
+#        'custom_momentum-1.0divk**0.5-0.9': (custom_momentum, {'learning_rate': 1.0, 'momentum': 0.9, 'tau': 0.5}),
 
-        'custom_momentum-1.0divk**1.0-0.9': (custom_momentum_chlr, {'learning_rate': 1.0, 'momentum': 0.0, 'tau': 1.0}),
-        'custom_momentum-1.0divk**0.75-0.9': (custom_momentum_chlr, {'learning_rate': 1.0, 'momentum': 0.0, 'tau': 0.75}),
-        'custom_momentum-1.0divk**0.5-0.9': (custom_momentum_chlr, {'learning_rate': 1.0, 'momentum': 0.0, 'tau': 0.5}),
+#        'custom_nesterov_momentum-1.0divk**1.0-0.9': (custom_nesterov_momentum, {'learning_rate': 1.0, 'momentum': 0.9, 'tau': 1.0}),
+#        'custom_nesterov_momentum-1.0divk**0.75-0.5': (custom_nesterov_momentum, {'learning_rate': 1.0, 'momentum': 0.5, 'tau': 0.75}),
+#        'custom_nesterov_momentum-1.0divk**0.5-0.1': (custom_nesterov_momentum, {'learning_rate': 1.0, 'momentum': 0.1, 'tau': 0.5}),
+#        'custom_nesterov_momentum-100.0divk**0.5-0.9': (custom_nesterov_momentum, {'learning_rate': 100.0, 'momentum': 0.9, 'tau': 0.5}),
+
+#        'custom_adagrad_10.0': (custom_adagrad, {'learning_rate': 10.0}),
+#        'custom_adagrad_1.0': (custom_adagrad, {'learning_rate': 1.0}),
+#        'custom_adagrad_0.1': (custom_adagrad, {'learning_rate': 0.1}),
+#        'custom_adagrad_0.01': (custom_adagrad, {'learning_rate': 0.01}),
+
+#        'custom_rmsprop_0.01-0.9': (custom_rmsprop, {'learning_rate': 0.01, 'rho': 0.9}),
+#        'custom_rmsprop_0.01-0.6': (custom_rmsprop, {'learning_rate': 0.01, 'rho': 0.6}),
+#        'custom_rmsprop_0.01-0.3': (custom_rmsprop, {'learning_rate': 0.01, 'rho': 0.3}),
+#        'custom_rmsprop_0.01-0.1': (custom_rmsprop, {'learning_rate': 0.01, 'rho': 0.1}),
+
+#        'custom_adam_0.01_0.9_0.999': (custom_adam, {'learning_rate': 0.01, 'beta1': 0.9, 'beta2': 0.999}), # best try
+#        'custom_adam_0.01_0.5_0.999': (custom_adam, {'learning_rate': 0.01, 'beta1': 0.5, 'beta2': 0.999}),
+#        'custom_adam_0.01_0.1_0.999': (custom_adam, {'learning_rate': 0.01, 'beta1': 0.1, 'beta2': 0.999}),
+#
+#        'custom_adam_0.01_0.9_0.5': (custom_adam, {'learning_rate': 0.01, 'beta1': 0.9, 'beta2': 0.5}),
+#        'custom_adam_0.01_0.9_0.1': (custom_adam, {'learning_rate': 0.01, 'beta1': 0.9, 'beta2': 0.1}),
+#        
+#        'custom_adam_0.1_0.9_0.999': (custom_adam, {'learning_rate': 0.1, 'beta1': 0.9, 'beta2': 0.999}),
+#        'custom_adam_1.0_0.9_0.999': (custom_adam, {'learning_rate': 1.0, 'beta1': 0.9, 'beta2': 0.999}),
+#        'custom_adam_10.0_0.9_0.999': (custom_adam, {'learning_rate': 10.0, 'beta1': 0.9, 'beta2': 0.999}),
+
+        'adam_reg': (lasagne.updates.adam, {'learning_rate': 0.01}),
     }
 
     for model in models.keys():
@@ -89,8 +113,8 @@ def main():
 
         plt.plot(val_err, label=model)
     
-#        np.savez('model_%s.npz' % model, *lasagne.layers.get_all_param_values(network))
-#        np.savez('model_%s_val_error.npz' % model, val_err)
+        np.savez('model_%s.npz' % model, *lasagne.layers.get_all_param_values(network))
+        np.savez('model_%s_val_error.npz' % model, val_err)
 
     plt.title('Validation error/epoch')    
     plt.legend()
