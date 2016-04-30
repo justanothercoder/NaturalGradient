@@ -80,7 +80,7 @@ def main():
         plt.imshow(X_train[j].reshape(28, 28), cmap='Greys')
 
     for i, model in enumerate(methods):
-        with np.load('model_%s.npz' % model) as f:
+        with np.load('models/model_%s.npz' % model) as f:
             param_values = [f['arr_%d' % j] for j in range(len(f.files))]
             lasagne.layers.set_all_param_values(network, param_values)
 

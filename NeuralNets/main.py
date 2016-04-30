@@ -113,8 +113,8 @@ def main():
 
         plt.plot(val_err, label=model)
     
-        np.savez('model_%s.npz' % model, *lasagne.layers.get_all_param_values(network))
-        np.savez('model_%s_val_error.npz' % model, val_err)
+        np.savez('models/model_%s.npz' % model, *lasagne.layers.get_all_param_values(network))
+        np.savez('models/model_%s_val_error.npz' % model, val_err)
 
     plt.title('Validation error/epoch')    
     plt.legend()

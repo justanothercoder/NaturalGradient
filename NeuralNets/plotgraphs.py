@@ -5,7 +5,7 @@ import seaborn
 def plot(params):
 
     for i, model in enumerate(params):
-        with np.load('model_%s_val_error.npz' % model) as f:
+        with np.load('models/model_%s_val_error.npz' % model) as f:
             val_err = f['arr_0']
         
 #        if model.find('nesterov') != -1:

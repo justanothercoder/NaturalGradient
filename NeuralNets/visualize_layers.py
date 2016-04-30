@@ -5,7 +5,7 @@ import math
 
 model = 'adam_reg'
 
-with np.load('model_%s.npz' % model) as f:
+with np.load('models/model_%s.npz' % model) as f:
     param_values = [f['arr_%d' % j] for j in range(len(f.files))]
 
 n_images = 16
