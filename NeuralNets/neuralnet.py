@@ -21,7 +21,13 @@ def iterate_minibatches(inputs, targets, batchsize, shuffle=False):
 def build(input_var=None, n_hidden=200):
     input_layer = lasagne.layers.InputLayer(shape=(None, 784), input_var=input_var)
     hidden_layer = lasagne.layers.DenseLayer(input_layer, num_units=n_hidden, nonlinearity=lasagne.nonlinearities.sigmoid)
+
+#    hidden2 = lasagne.layers.DenseLayer(hidden_layer, num_units=2, nonlinearity=lasagne.nonlinearities.sigmoid)
+
+#    hidden3 = lasagne.layers.DenseLayer(hidden2, num_units=n_hidden, nonlinearity=lasagne.nonlinearities.sigmoid)
+
     output_layer = lasagne.layers.DenseLayer(hidden_layer, num_units=784, nonlinearity=lasagne.nonlinearities.sigmoid)
+#    output_layer = lasagne.layers.DenseLayer(hidden3, num_units=784, nonlinearity=lasagne.nonlinearities.sigmoid)
     return output_layer
 
 def get_network_stats(X_train, X_val, X_test, n_epochs, n_hidden, objective, update, **update_params):
@@ -32,7 +38,7 @@ def get_network_stats(X_train, X_val, X_test, n_epochs, n_hidden, objective, upd
 
     prediction = lasagne.layers.get_output(network)
     #loss = lasagne.objectives.binary_crossentropy(prediction, target_var)
-    loss = objective(prediction, target_var) + 1.0 * lasagne.regularization.regularize_layer_params(network, lasagne.regularization.l1)
+    loss = objective(prediction, target_var) + 0.00 * lasagne.regularization.regularize_layer_params(network, lasagne.regularization.l1)
     loss = loss.mean()
 
     params = lasagne.layers.get_all_params(network, trainable=True)

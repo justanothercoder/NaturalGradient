@@ -8,6 +8,8 @@ model = 'adam_reg'
 with np.load('models/model_%s.npz' % model) as f:
     param_values = [f['arr_%d' % j] for j in range(len(f.files))]
 
+    print param_values[2].shape
+
 n_images = 16
 for i in range(n_images):
     img = param_values[0][:, i].reshape(28, 28)

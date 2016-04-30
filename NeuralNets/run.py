@@ -7,7 +7,7 @@ import theano
 import theano.tensor as T 
 import lasagne
 
-from main import load_dataset
+from load_dataset import *
 from neuralnet import build
 
 def main():
@@ -20,7 +20,8 @@ def main():
     network = build(input_var, n_hidden=300)
 
 #    methods = ['adam', 'momentum', 'nesterov_momentum', 'adagrad', 'rmsprop', 'custom_momentum']
-    methods = ['custom_adam_0.01_0.9_0.999', 'adam']
+#    methods = ['custom_adam_0.01_0.9_0.999', 'adam']
+    methods = ['adam_reg']
 
     n_images = 10
     
