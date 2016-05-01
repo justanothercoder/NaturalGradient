@@ -55,6 +55,8 @@ def get_network_stats(X_train, X_val, X_test, n_epochs, n_hidden, objective, upd
     train_error = []
     validation_error = []
 
+#    theano_rng = T.shared_randomstreams.RandomStreams(np.random.randint(2**30))
+
     print("Starting training...")
     for epoch in range(n_epochs):
 
@@ -63,7 +65,8 @@ def get_network_stats(X_train, X_val, X_test, n_epochs, n_hidden, objective, upd
 
         t = time.time()
         
-        for batch in iterate_minibatches(X_train, X_train, 500, shuffle=True):
+#        for batch in iterate_minibatches(np.array(X_train + np.random.randn(*X_train.shape) * 0.1, dtype=np.float32), X_train, 500, shuffle=True):
+        for batch in iterate_minibatches(np.array(X_train * np.random.binomial(size=X_train.shape, n=1, p=0.5), dtype=np.float32), X_train, 500, shuffle=True):
             inputs, targets = batch
             train_err += train_fn(inputs, targets)
             train_batches += 1
