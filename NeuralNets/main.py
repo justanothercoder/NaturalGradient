@@ -18,8 +18,8 @@ def main():
     print("Loading data...")
     X_train, y_train, X_val, y_val, X_test, y_test = load_dataset()
 
-    n_epochs = 300
-    n_hidden = 500
+    n_epochs = 100
+    n_hidden = 300
 
     objective = lasagne.objectives.binary_crossentropy
 
@@ -68,7 +68,9 @@ def main():
 #        'custom_adam_10.0_0.9_0.999': (custom_adam, {'learning_rate': 10.0, 'beta1': 0.9, 'beta2': 0.999}),
 
 #        'adam_reg_denoising100': (lasagne.updates.adam, {'learning_rate': 0.01}),
-        'momentum_reg_denoising100': (lasagne.updates.momentum, {'learning_rate': 10.0, 'momentum': 0.9}),
+#        'momentum_reg_denoising100': (lasagne.updates.momentum, {'learning_rate': 10.0, 'momentum': 0.9}),
+
+        'adam_reg': (lasagne.updates.adam, {'learning_rate': 0.01})
     }
 
     for model in models.keys():

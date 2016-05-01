@@ -29,8 +29,6 @@ def main():
 
     model = 'adam_reg'
 
-    n_images = 10
-    
     with np.load('models/model_%s.npz' % model) as f:
         print f.files
         param_values = [f['arr_%d' % j] for j in range(len(f.files[:2]))]
@@ -40,7 +38,7 @@ def main():
 
     indices = np.arange(X_test.shape[0])
     np.random.shuffle(indices)
-    indices = indices[:3000]
+    indices = indices[:1000]
 
     X, Y = X_test[indices], y_test[indices]
 
