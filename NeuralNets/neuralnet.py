@@ -37,12 +37,10 @@ def get_network_stats(X_train, X_val, X_test, n_epochs, n_hidden, objective, upd
     network = build(input_var, n_hidden=n_hidden)
 
     prediction = lasagne.layers.get_output(network)
-    #loss = lasagne.objectives.binary_crossentropy(prediction, target_var)
     loss = objective(prediction, target_var) + 0.00 * lasagne.regularization.regularize_layer_params(network, lasagne.regularization.l1)
     loss = loss.mean()
 
     params = lasagne.layers.get_all_params(network, trainable=True)
-    #updates = lasagne.updates.adam(loss, params, learning_rate=0.01)
     updates = update(loss, params, **update_params)
 
     test_prediction = lasagne.layers.get_output(network, deterministic=True)
@@ -54,8 +52,6 @@ def get_network_stats(X_train, X_val, X_test, n_epochs, n_hidden, objective, upd
 
     train_error = []
     validation_error = []
-
-#    theano_rng = T.shared_randomstreams.RandomStreams(np.random.randint(2**30))
 
     print("Starting training...")
     for epoch in range(n_epochs):
