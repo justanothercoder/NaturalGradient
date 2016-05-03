@@ -21,7 +21,8 @@ def main():
 
 #    methods = ['adam', 'momentum', 'nesterov_momentum', 'adagrad', 'rmsprop', 'custom_momentum']
 #    methods = ['custom_adam_0.01_0.9_0.999', 'adam']
-    methods = ['adam_reg']
+#    methods = ['adam_reg']
+    methods = ['adam_reg_dummy']
 
     n_images = 10
     

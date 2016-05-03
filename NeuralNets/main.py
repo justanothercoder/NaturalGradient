@@ -70,7 +70,7 @@ def main():
 #        'adam_reg_denoising100': (lasagne.updates.adam, {'learning_rate': 0.01}),
 #        'momentum_reg_denoising100': (lasagne.updates.momentum, {'learning_rate': 10.0, 'momentum': 0.9}),
 
-        'adam_reg': (lasagne.updates.adam, {'learning_rate': 0.01})
+        'adam_reg_dummy': (lasagne.updates.adam, {'learning_rate': 0.01})
     }
 
     for model in models.keys():

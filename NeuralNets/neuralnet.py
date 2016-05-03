@@ -21,16 +21,47 @@ def iterate_minibatches(inputs, targets, batchsize, shuffle=False):
 def build(input_var=None, n_hidden=200):
     input_layer = lasagne.layers.InputLayer(shape=(None, 784), input_var=input_var)
     hidden_layer = lasagne.layers.DenseLayer(input_layer, num_units=n_hidden, nonlinearity=lasagne.nonlinearities.sigmoid)
-
-#    hidden2 = lasagne.layers.DenseLayer(hidden_layer, num_units=2, nonlinearity=lasagne.nonlinearities.sigmoid)
-
-#    hidden3 = lasagne.layers.DenseLayer(hidden2, num_units=n_hidden, nonlinearity=lasagne.nonlinearities.sigmoid)
-
     output_layer = lasagne.layers.DenseLayer(hidden_layer, num_units=784, nonlinearity=lasagne.nonlinearities.sigmoid)
-#    output_layer = lasagne.layers.DenseLayer(hidden3, num_units=784, nonlinearity=lasagne.nonlinearities.sigmoid)
     return output_layer
 
-def get_network_stats(X_train, X_val, X_test, n_epochs, n_hidden, objective, update, **update_params):
+def train(X_train, Y_train, X_val, Y_val, train_fn, val_fn, n_epochs, batch_size=500, verbose=True):
+    train_error = []
+    validation_error = []
+
+    if verbose:
+        print("Starting training...")
+    for epoch in range(n_epochs):
+
+        train_err = 0
+        train_batches = 0
+
+        t = time.time()
+        
+        for batch in iterate_minibatches(X_train, Y_train, batch_size, shuffle=True):
+            inputs, targets = batch
+            train_err += train_fn(inputs, targets)
+            train_batches += 1
+
+        val_err = 0
+        val_acc = 0
+        val_batches = 0
+        for batch in iterate_minibatches(X_val, Y_val, batch_size, shuffle=False):
+            inputs, targets = batch
+            err = val_fn(inputs, targets)
+            val_err += err
+            val_batches += 1
+
+        train_error.append(train_err)
+        validation_error.append(val_err)
+        
+        if verbose:
+            print("Epoch {} of {} took {:.3f}s".format(epoch + 1, n_epochs, time.time() - t))
+            print("  training loss:\t\t{:.6f}".format(train_err / train_batches))
+            print("  validation loss:\t\t{:.6f}".format(val_err / val_batches))
+
+    return train_error, validation_error
+
+def get_network_stats(X_train, X_val, X_test, n_epochs, n_hidden, objective, update, batch_size=500, **update_params):
     input_var = T.matrix('inputs')
     target_var = T.matrix('targets')
 
@@ -50,43 +81,18 @@ def get_network_stats(X_train, X_val, X_test, n_epochs, n_hidden, objective, upd
     train_fn = theano.function([input_var, target_var], loss, updates=updates)
     val_fn = theano.function([input_var, target_var], test_loss)
 
-    train_error = []
-    validation_error = []
-
-    print("Starting training...")
-    for epoch in range(n_epochs):
-
-        train_err = 0
-        train_batches = 0
-
-        t = time.time()
-        
-#        for batch in iterate_minibatches(np.array(X_train + np.random.randn(*X_train.shape) * 0.1, dtype=np.float32), X_train, 500, shuffle=True):
-        for batch in iterate_minibatches(np.array(X_train * np.random.binomial(size=X_train.shape, n=1, p=0.5), dtype=np.float32), X_train, 500, shuffle=True):
-            inputs, targets = batch
-            train_err += train_fn(inputs, targets)
-            train_batches += 1
-
-        val_err = 0
-        val_acc = 0
-        val_batches = 0
-        for batch in iterate_minibatches(X_val, X_val, 500, shuffle=False):
-            inputs, targets = batch
-            err = val_fn(inputs, targets)
-            val_err += err
-            val_batches += 1
-
-        train_error.append(train_err)
-        validation_error.append(val_err)
-        
-        print("Epoch {} of {} took {:.3f}s".format(epoch + 1, n_epochs, time.time() - t))
-        print("  training loss:\t\t{:.6f}".format(train_err / train_batches))
-        print("  validation loss:\t\t{:.6f}".format(val_err / val_batches))
+    train_error, validation_error = train(
+            np.array(X_train * np.random.binomial(size=X_train.shape, n=1, p=0.5), dtype=np.float32), X_train,
+            X_val, X_val,
+            train_fn, val_fn,
+            n_epochs,
+            batch_size=batch_size
+    )
     
     test_err = 0
     test_acc = 0
     test_batches = 0
-    for batch in iterate_minibatches(X_test, X_test, 500, shuffle=False):
+    for batch in iterate_minibatches(X_test, X_test, batch_size, shuffle=False):
         inputs, targets = batch
         err = val_fn(inputs, targets)
         test_err += err
@@ -95,7 +101,3 @@ def get_network_stats(X_train, X_val, X_test, n_epochs, n_hidden, objective, upd
     print("  test loss:\t\t\t{:.6f}".format(test_err / test_batches))
 
     return network, train_error, validation_error
-
-# with np.load('model.npz') as f:
-#   param_values = [f['arr_%d' % i] for i in range(len(f.files))]
-# lasagne.layers.set_all_param_values(network, param_values)

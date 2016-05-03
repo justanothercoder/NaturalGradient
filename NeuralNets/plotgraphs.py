@@ -47,10 +47,10 @@ params = [
     'custom_adam_0.01_0.9_0.999',
 #    'custom_adam_0.01_0.5_0.999',
 #    'custom_adam_0.01_0.1_0.999',
-                                
+#                               
 #    'custom_adam_0.01_0.9_0.5',
 #    'custom_adam_0.01_0.9_0.1',
-
+#
 #    'custom_adam_0.1_0.9_0.999',
 #    'custom_adam_1.0_0.9_0.999',
 #    'custom_adam_10.0_0.9_0.999',
