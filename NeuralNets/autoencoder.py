@@ -7,22 +7,26 @@ import lasagne
 
 from neuralnet import train
 
-def autoencoder_network(input_var, n_input, n_hidden):
+def autoencoder_network(input_var, n_input, n_hidden, 
+                        W=lasagne.init.GlorotUniform(), 
+                        bhid=lasagne.init.Constant(0.), bvis=lasagne.init.Constant(0.)):
+
     input_layer  = lasagne.layers.InputLayer(shape=(None, n_input), input_var=input_var)
-    hidden_layer = lasagne.layers.DenseLayer(input_layer, num_units=n_hidden, nonlinearity=lasagne.nonlinearities.sigmoid)
-    output_layer = lasagne.layers.DenseLayer(hidden_layer, num_units=n_input, nonlinearity=lasagne.nonlinearities.sigmoid, W=hidden_layer.W.T)
+    hidden_layer = lasagne.layers.DenseLayer(input_layer, num_units=n_hidden, nonlinearity=lasagne.nonlinearities.sigmoid, W=W, b=bhid)
+    output_layer = lasagne.layers.DenseLayer(hidden_layer, num_units=n_input, nonlinearity=lasagne.nonlinearities.sigmoid, W=hidden_layer.W.T, b=bvis)
 
     return input_layer, hidden_layer, output_layer
 
 class DenoisingAutoEncoder:
-    def __init__(self, n_input, n_hidden, input_var=None):
+    def __init__(self, n_input, n_hidden, input_var=None, 
+                 W=lasagne.init.GlorotUniform(), bvis=lasagne.init.Constant(0.), bhid=lasagne.init.Constant(0.)):
         self.n_input  = n_input
         self.n_hidden = n_hidden
 
         self.input_var = input_var or T.matrix('inputs')
         self.target_var = T.matrix('targets')
    
-        self.input_layer, self.hidden_layer, self.output_layer = autoencoder_network(self.input_var, self.n_input, self.n_hidden)
+        self.input_layer, self.hidden_layer, self.output_layer = autoencoder_network(self.input_var, self.n_input, self.n_hidden, W=W, bhid=bhid, bvis=bvis)
         
         self.hidden_output = lasagne.layers.get_output(self.hidden_layer)
     
@@ -48,6 +52,8 @@ class DenoisingAutoEncoder:
             test_loss = objective(test_prediction, self.target_var)
             test_loss = test_loss.mean()
             val_fn = theano.function([self.input_var, self.target_var], test_loss)
+        else:
+            val_fn = None
         
         train_error, validation_error = train(
                 np.array(X_train * np.random.binomial(size=X_train.shape, n=1, p=0.5), dtype=np.float32), X_train,

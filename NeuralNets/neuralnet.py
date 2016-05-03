@@ -41,23 +41,27 @@ def train(X_train, Y_train, X_val, Y_val, train_fn, val_fn, n_epochs, batch_size
             inputs, targets = batch
             train_err += train_fn(inputs, targets)
             train_batches += 1
-
-        val_err = 0
-        val_acc = 0
-        val_batches = 0
-        for batch in iterate_minibatches(X_val, Y_val, batch_size, shuffle=False):
-            inputs, targets = batch
-            err = val_fn(inputs, targets)
-            val_err += err
-            val_batches += 1
-
+        
         train_error.append(train_err)
-        validation_error.append(val_err)
+
+        if X_val is not None:
+            val_err = 0
+            val_acc = 0
+            val_batches = 0
+            for batch in iterate_minibatches(X_val, Y_val, batch_size, shuffle=False):
+                inputs, targets = batch
+                err = val_fn(inputs, targets)
+                val_err += err
+                val_batches += 1
+       
+            validation_error.append(val_err)
+
         
         if verbose:
             print("Epoch {} of {} took {:.3f}s".format(epoch + 1, n_epochs, time.time() - t))
             print("  training loss:\t\t{:.6f}".format(train_err / train_batches))
-            print("  validation loss:\t\t{:.6f}".format(val_err / val_batches))
+            if X_val is not None:
+                print("  validation loss:\t\t{:.6f}".format(val_err / val_batches))
 
     return train_error, validation_error
 

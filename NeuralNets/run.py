@@ -10,6 +10,8 @@ import lasagne
 from load_dataset import *
 from neuralnet import build
 
+from deep import DeepAutoEncoder
+
 def main():
     
     X_train, y_train, X_val, y_val, X_test, y_test = load_dataset()
@@ -17,7 +19,8 @@ def main():
     input_var = T.matrix('inputs')
     target_var = T.matrix('targets')
 
-    network = build(input_var, n_hidden=300)
+#    network = build(input_var, n_hidden=300)
+    network = DeepAutoEncoder(784, [300, 2, 300]).output_layer
 
 #    methods = ['adam', 'momentum', 'nesterov_momentum', 'adagrad', 'rmsprop', 'custom_momentum']
 #    methods = ['custom_adam_0.01_0.9_0.999', 'adam']
