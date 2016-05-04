@@ -27,12 +27,15 @@ class DeepAutoEncoder:
         for i in range(self.n_layers):
             hid = lasagne.layers.DenseLayer(self.hidden_layers[-1], num_units=hidden_sizes[i], nonlinearity=lasagne.nonlinearities.sigmoid)
             dA = autoencoder.DenoisingAutoEncoder(in_size, hidden_sizes[i], input_var=inp_var, W=hid.W, bhid=hid.b)
-
+    
             inp_var = lasagne.layers.get_output(self.hidden_layers[-1])
             in_size = hidden_sizes[i]
             
             self.hidden_layers.append(hid)
             self.dA_layers.append(dA)
+
+        self.finished = False
+        self.pretrained = False
 
 #        out = lasagne.layers.DenseLayer(self.hidden_layers[-1], num_units=n_input, nonlinearity=lasagne.nonlinearities.sigmoid)
 #        self.hidden_layers.append(out)
@@ -43,9 +46,10 @@ class DeepAutoEncoder:
             objective=lasagne.objectives.binary_crossentropy, 
             update=lasagne.updates.adam, 
             n_epochs=100, batch_size=500,
+            n_pretrain_epochs=100,
             **update_params):
 
-        self.pretrain(X_train, X_val, objective, update, n_epochs=n_epochs, batch_size=batch_size, **update_params)
+        self.pretrain(X_train, X_val, objective, update, n_epochs=n_pretrain_epochs, batch_size=batch_size, **update_params)
         self.finish_network()
 
         network = self.hidden_layers[-1]
@@ -78,6 +82,11 @@ class DeepAutoEncoder:
             update=lasagne.updates.adam, 
             n_epochs=100, batch_size=500,
             **update_params):
+
+        if self.pretrained:
+            return
+
+        self.pretrained = True
         
         pretrain_X = X_train
 
@@ -89,6 +98,11 @@ class DeepAutoEncoder:
         print ("Pretraining finished")
 
     def finish_network(self):
+
+        if self.finished:
+            return
+
+        self.finished = True
 
         j = len(self.hidden_layers) - 1
 

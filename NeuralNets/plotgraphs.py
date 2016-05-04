@@ -28,14 +28,15 @@ def plot(params):
 #    'custom_momentum-0.1-0.1',
 #]
 
-#params = [
-#    'custom_momentum-1.0divk**1.0-0.9',
-#    'custom_momentum-1.0divk**0.75-0.9',
-#    'custom_momentum-1.0divk**0.5-0.9',
-#    'custom_nesterov_momentum-1.0divk**1.0-0.9',
-#    'custom_nesterov_momentum-1.0divk**0.75-0.9',
-#    'custom_nesterov_momentum-1.0divk**0.5-0.9',
-#]
+params = [
+    'custom_momentum-1.0divk**1.0-0.9',
+    'custom_momentum-1.0divk**0.75-0.9',
+    'custom_momentum-1.0divk**0.5-0.9',
+    'custom_nesterov_momentum-1.0divk**1.0-0.9',
+    'custom_nesterov_momentum-1.0divk**0.75-0.9',
+    'custom_nesterov_momentum-1.0divk**0.5-0.9',
+    'custom_momentum-1.0-0.9'
+]
 
 #params = [
 #    'custom_adagrad_0.01',
@@ -64,13 +65,13 @@ def plot(params):
 #    'custom_adam_10.0_0.9_0.999',
 #]
 
-params = [
-    'custom_adam_0.01_0.9_0.999',
-    'custom_adagrad_0.1',
-    'custom_rmsprop_0.01-0.9',
-    'custom_momentum-1.0divk**0.5-0.9',
-    'custom_momentum-1.0-0.9',
-]
+#params = [
+#    'custom_adam_0.01_0.9_0.999',
+#    'custom_adagrad_0.1',
+#    'custom_rmsprop_0.01-0.9',
+#    'custom_momentum-1.0divk**0.5-0.9',
+#    'custom_momentum-1.0-0.9',
+#]
 
 plot(params)
 
