@@ -56,7 +56,7 @@ class DenoisingAutoEncoder:
             val_fn = None
         
         train_error, validation_error = train(
-                np.array(X_train * np.random.binomial(size=X_train.shape, n=1, p=0.5), dtype=np.float32), X_train,
+                np.array(X_train * np.random.binomial(size=X_train.shape, n=1, p=0.8), dtype=np.float32), X_train,
                 X_val, X_val,
                 train_fn, val_fn,
                 n_epochs,

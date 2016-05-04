@@ -34,10 +34,10 @@ class DeepAutoEncoder:
             self.hidden_layers.append(hid)
             self.dA_layers.append(dA)
 
-        out = lasagne.layers.DenseLayer(self.hidden_layers[-1], num_units=n_input, nonlinearity=lasagne.nonlinearities.sigmoid)
-        self.hidden_layers.append(out)
-
-        self.output_layer = out
+#        out = lasagne.layers.DenseLayer(self.hidden_layers[-1], num_units=n_input, nonlinearity=lasagne.nonlinearities.sigmoid)
+#        self.hidden_layers.append(out)
+#
+#        self.output_layer = out
 
     def train(self, X_train, X_val=None,
             objective=lasagne.objectives.binary_crossentropy, 
@@ -45,14 +45,8 @@ class DeepAutoEncoder:
             n_epochs=100, batch_size=500,
             **update_params):
 
-        pretrain_X = X_train
-
-        print ("Pretraining...")
-        for i, dA in enumerate(self.dA_layers):
-            print ("Pretraining {}->{} layers".format(i, i+1))
-            dA.train(pretrain_X, None, objective=objective, update=update, n_epochs=n_epochs, batch_size=batch_size)
-            pretrain_X = dA.get_hidden(pretrain_X)
-        print ("Pretraining finished")
+        self.pretrain(X_train, X_val, objective, update, n_epochs=n_epochs, batch_size=batch_size, **update_params)
+        self.finish_network()
 
         network = self.hidden_layers[-1]
 
@@ -78,3 +72,39 @@ class DeepAutoEncoder:
         )
 
         return train_error, validation_error
+
+    def pretrain(self, X_train, X_val=None,
+            objective=lasagne.objectives.binary_crossentropy, 
+            update=lasagne.updates.adam, 
+            n_epochs=100, batch_size=500,
+            **update_params):
+        
+        pretrain_X = X_train
+
+        print ("Pretraining...")
+        for i, dA in enumerate(self.dA_layers):
+            print ("Pretraining {}->{} layers".format(i, i+1))
+            dA.train(pretrain_X, None, objective=objective, update=update, n_epochs=n_epochs, batch_size=batch_size, **update_params)
+            pretrain_X = dA.get_hidden(pretrain_X)
+        print ("Pretraining finished")
+
+    def finish_network(self):
+
+        j = len(self.hidden_layers) - 1
+
+        for dA in reversed(self.dA_layers[1:]):
+            W = dA.hidden_layer.W.get_value()
+            b = dA.output_layer.b.get_value()
+
+            print W.shape, b.shape
+
+            j -= 1
+            hid = lasagne.layers.DenseLayer(self.hidden_layers[-1], 
+                                            num_units=self.hidden_layers[j].num_units, 
+                                            nonlinearity=lasagne.nonlinearities.sigmoid, W=W.T, b=b)
+            self.hidden_layers.append(hid)
+
+        out = lasagne.layers.DenseLayer(self.hidden_layers[-1], num_units=self.n_input, nonlinearity=lasagne.nonlinearities.sigmoid)
+        self.hidden_layers.append(out)
+
+        self.output_layer = out

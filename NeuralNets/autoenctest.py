@@ -21,20 +21,21 @@ def main():
     print("Loading data...")
     X_train, y_train, X_val, y_val, X_test, y_test = load_dataset()
 
+#    n_epochs = 300
     n_epochs = 100
     n_hidden = 300
 
     objective = lasagne.objectives.binary_crossentropy
 
     models = {
-        'adam_reg_dummy': (lasagne.updates.adam, {'learning_rate': 0.01})
+        'adam_deep_test_tied': (lasagne.updates.adam, {'learning_rate': 0.01})
     }
 
     for model in models.keys():
         update, update_params = models[model]
 
 #        network = autoencoder.DenoisingAutoEncoder(n_input=X_train.shape[1], n_hidden=n_hidden)
-        network = deep.DeepAutoEncoder(n_input=X_train.shape[1], hidden_sizes=[300, 2, 300])
+        network = deep.DeepAutoEncoder(n_input=X_train.shape[1], hidden_sizes=[300, 2])
 
         train_err, val_err = network.train(X_train, X_val, n_epochs=n_epochs, objective=objective, update=update, **update_params)
 

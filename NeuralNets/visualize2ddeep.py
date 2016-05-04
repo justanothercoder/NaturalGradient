@@ -22,12 +22,17 @@ def main():
 #    network = DeepAutoEncoder(784, [300, 2, 300]).hidden_layers[2]
 #    model = 'adam_deep300-2-300_0.01'
 
-    network = DeepAutoEncoder(784, [300, 150, 2, 150, 300]).hidden_layers[4]
-    model = 'adam_deep_0.01'
+#    network = DeepAutoEncoder(784, [300, 150, 2, 150, 300]).hidden_layers[4]
+#    model = 'adam_deep_0.01'
+    network = DeepAutoEncoder(784, [300, 2])
+    network.finish_network()
+    network = network.hidden_layers[2]
+    model = 'adam_deep_test_tied'
 
     with np.load('models/model_%s.npz' % model) as f:
         print f.files
-        param_values = [f['arr_%d' % j] for j in range(len(f.files[:8]))]
+#        param_values = [f['arr_%d' % j] for j in range(len(f.files[:8]))]
+        param_values = [f['arr_%d' % j] for j in range(len(f.files[:4]))]
         lasagne.layers.set_all_param_values(network, param_values)
 
     test_prediction = lasagne.layers.get_output(network, deterministic=True)

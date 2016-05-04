@@ -20,12 +20,17 @@ def main():
     target_var = T.matrix('targets')
 
 #    network = build(input_var, n_hidden=300)
-    network = DeepAutoEncoder(784, [300, 2, 300]).output_layer
+    network = DeepAutoEncoder(784, [300, 2])
+    network.finish_network()
+    network = network.output_layer
 
 #    methods = ['adam', 'momentum', 'nesterov_momentum', 'adagrad', 'rmsprop', 'custom_momentum']
 #    methods = ['custom_adam_0.01_0.9_0.999', 'adam']
 #    methods = ['adam_reg']
-    methods = ['adam_reg_dummy']
+
+    #methods = ['adam_reg_dummy']
+#    methods = ['adam_deep300-2-300_0.01']
+    methods = ['adam_deep_test_tied']
 
     n_images = 10
     

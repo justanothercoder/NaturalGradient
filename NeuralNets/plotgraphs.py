@@ -4,6 +4,7 @@ import seaborn
 
 def plot(params):
 
+    colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'orange', 'darkgreen', 'lime']
     for i, model in enumerate(params):
         with np.load('models/model_%s_val_error.npz' % model) as f:
             val_err = f['arr_0']
@@ -16,7 +17,7 @@ def plot(params):
 #            style = '-'
         style = '-'
 
-        plt.plot(val_err, label=model, linestyle=style)
+        plt.plot(val_err, label=model, linestyle=style, color=colors[i])
 
 #params = [
 #    'custom_momentum-1.0-0.9',
@@ -25,7 +26,7 @@ def plot(params):
 #    'custom_momentum-0.001-0.9',
 #    'custom_momentum-0.1-0.5',
 #    'custom_momentum-0.1-0.1',
-#    ]
+#]
 
 #params = [
 #    'custom_momentum-1.0divk**1.0-0.9',
@@ -37,14 +38,21 @@ def plot(params):
 #]
 
 #params = [
+#    'custom_adagrad_0.01',
+#    'custom_adagrad_0.1',
+#    'custom_adagrad_1.0',
+#    'custom_adagrad_10.0'
+#]
+
+#params = [
 #    'custom_rmsprop_0.01-0.9',
 #    'custom_rmsprop_0.01-0.6',
 #    'custom_rmsprop_0.01-0.3',
 #    'custom_rmsprop_0.01-0.1'
 #]
 
-params = [
-    'custom_adam_0.01_0.9_0.999',
+#params = [
+#    'custom_adam_0.01_0.9_0.999',
 #    'custom_adam_0.01_0.5_0.999',
 #    'custom_adam_0.01_0.1_0.999',
 #                               
@@ -54,6 +62,14 @@ params = [
 #    'custom_adam_0.1_0.9_0.999',
 #    'custom_adam_1.0_0.9_0.999',
 #    'custom_adam_10.0_0.9_0.999',
+#]
+
+params = [
+    'custom_adam_0.01_0.9_0.999',
+    'custom_adagrad_0.1',
+    'custom_rmsprop_0.01-0.9',
+    'custom_momentum-1.0divk**0.5-0.9',
+    'custom_momentum-1.0-0.9',
 ]
 
 plot(params)

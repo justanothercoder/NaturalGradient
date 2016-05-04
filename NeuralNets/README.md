@@ -7,3 +7,4 @@
     * Denoising autoencoder +
     * Sparse autoencoder
     * Hessian free optimization
+    * Deeper network +
