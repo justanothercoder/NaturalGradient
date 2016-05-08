@@ -41,7 +41,7 @@ def train(X_train, Y_train, X_val, Y_val, train_fn, val_fn, n_epochs, batch_size
             inputs, targets = batch
             train_err += train_fn(inputs, targets)
             train_batches += 1
-        
+
         train_error.append(train_err)
 
         if X_val is not None:
@@ -56,7 +56,6 @@ def train(X_train, Y_train, X_val, Y_val, train_fn, val_fn, n_epochs, batch_size
        
             validation_error.append(val_err)
 
-        
         if verbose:
             print("Epoch {} of {} took {:.3f}s".format(epoch + 1, n_epochs, time.time() - t))
             print("  training loss:\t\t{:.6f}".format(train_err / train_batches))
