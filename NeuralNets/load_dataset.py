@@ -40,3 +40,11 @@ def load_dataset():
 
     return X_train, y_train, X_val, y_val, X_test, y_test
 
+def load_cifar(f):
+    import cPickle
+    fo = open(f, 'rb')
+    d = cPickle.load(fo)
+    fo.close()
+    print d
+    return d
+
