@@ -4,7 +4,10 @@ import seaborn
 import math
 
 #model = 'momentum_reg_denoising100'
-model = 'adam_reg_denoising100'
+#model = 'adam_reg_denoising100'
+
+#model = 'adam_sparse_7.0_not_denoising'
+model = 'svrg_100.0_squared_error'
 
 with np.load('models/model_%s.npz' % model) as f:
     param_values = [f['arr_%d' % j] for j in range(len(f.files))]
@@ -12,7 +15,8 @@ with np.load('models/model_%s.npz' % model) as f:
     print param_values[2].shape
 
 #n_images = 500
-n_images = 100
+n_images = 300
+#n_images = 25
 for i in range(n_images):
     img = param_values[0][:, i].reshape(28, 28)
 
@@ -23,5 +27,3 @@ for i in range(n_images):
     plt.imshow(img, cmap='Greys')
 
 plt.show()
-
-    #lasagne.layers.set_all_param_values(network, param_values)
