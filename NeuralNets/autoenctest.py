@@ -29,7 +29,7 @@ def main():
     objective = lasagne.objectives.binary_crossentropy
 
     models = {
-        'adam_deep_test_batch_norm': (lasagne.updates.momentum, {'learning_rate': 1.0, 'momentum': 0.9})
+        'adam_sparse': (lasagne.updates.momentum, {'learning_rate': 1.0, 'momentum': 0.9})
     }
 
     for model in models.keys():

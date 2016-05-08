@@ -31,7 +31,9 @@ def main():
     #objective = lasagne.objectives.squared_error
 
     models = {
-        'svrg_100.0m_300': (custom_svrg, {'learning_rate': 10.0, 'm': 400})
+    #    'svrg_100.0m_300': (custom_svrg, {'learning_rate': 100.0, 'm': 500})
+        'momentum_1.0_0.9_300': (custom_momentum, {'learning_rate': 1.0, 'momentum': 0.9}),
+        'adam_0.01_300': (custom_adam, {'learning_rate': 0.01}),        
     }
 
     for model in models.keys():
@@ -39,8 +41,8 @@ def main():
 
         network = autoencoder.DenoisingAutoEncoder(n_input=X_train.shape[1], n_hidden=n_hidden)
 
-        train_err, val_err = network.svrg_train(X_train, X_val, n_epochs=n_epochs, batch_size=200, lambd=0.0001,
-                                           objective=objective, **update_params)
+        train_err, val_err = network.train(X_train, X_val, n_epochs=n_epochs, batch_size=500, lambd=0.0,
+                                           objective=objective, update=update, **update_params)
 
         plt.plot(val_err, label=model)
     

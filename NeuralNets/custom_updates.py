@@ -172,7 +172,7 @@ def custom_svrg2(loss, params, m, learning_rate=0.01, objective=None, data=None,
 
     return updates
 
-def custom_svrg(loss, params, m, learning_rate=0.01):
+def custom_svrg(loss, params, m=100, learning_rate=0.01):
     
     grads = theano.grad(loss, params)
 
