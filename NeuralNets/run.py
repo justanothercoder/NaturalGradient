@@ -11,6 +11,7 @@ from load_dataset import *
 from neuralnet import build
 
 from deep import DeepAutoEncoder
+from sparse_autoencoder import SparseAutoEncoder
 
 def main():
     
@@ -19,14 +20,18 @@ def main():
     input_var = T.matrix('inputs')
     target_var = T.matrix('targets')
 
+    n_hidden = 300
+
 #    network = build(input_var, n_hidden=300)
 #    network = DeepAutoEncoder(784, [300, 2])
 #    network.finish_network()
 #    network = network.output_layer
 
-    network = DeepAutoEncoder(784, [300, 150, 2])
-    network.finish_network()
-    network = network.output_layer
+#    network = DeepAutoEncoder(784, [300, 150, 2])
+#    network.finish_network()
+#    network = network.output_layer
+
+    network = SparseAutoEncoder(784, n_hidden).output_layer
 
 #    methods = ['adam', 'momentum', 'nesterov_momentum', 'adagrad', 'rmsprop', 'custom_momentum']
 #    methods = ['custom_adam_0.01_0.9_0.999', 'adam']
@@ -36,7 +41,9 @@ def main():
 #    methods = ['adam_deep300-2-300_0.01']
 #    methods = ['adam_deep_test_tied']
 #    methods = ['adam_deep_test_batch_norm']
-    methods = ['adam_deep_0.01']
+#    methods = ['adam_deep_0.01']
+#    methods = ['adam_sparse_7.0_not_denoising']
+    methods = ['svrg_100.0']
 
     n_images = 10
     
