@@ -8,7 +8,7 @@
     * Deeper network +
     * Hessian free optimization
     
-    * `SAG` and `SVRG` optimization
-    * Classifier on top of deep network
-    * Sparse autoencoder
+    * `SAG` and `SVRG` optimization +
+    * Classifier on top of deep network +
+    * Sparse autoencoder +
     * Try another dataset (like CIFAR-10)
