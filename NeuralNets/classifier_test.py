@@ -26,7 +26,7 @@ def main():
     objective = lasagne.objectives.categorical_crossentropy
 
     models = {
-        'adam_classif': (lasagne.updates.adam, {'learning_rate': 0.01})
+        'adam_classif_dropout': (lasagne.updates.adam, {'learning_rate': 0.01})
     }
 
     for model in models.keys():
@@ -35,7 +35,7 @@ def main():
         network = neuralclassifier.NeuralClassifier(n_input=X_train.shape[1], n_hidden=n_hidden, n_output=10)
 
         train_err, val_err = network.train(X_train, y_train, X_val, y_val,
-                                           n_epochs=n_epochs, lambd=0.1,
+                                           n_epochs=n_epochs, lambd=0.0,
                                            objective=objective, update=update, **update_params)
 
         plt.plot(val_err, label=model)

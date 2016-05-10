@@ -25,7 +25,7 @@ def main():
 
     network = NeuralClassifier(784, n_hidden, 10).output_layer
 
-    methods = ['adam_classif']
+    methods = ['adam_classif', 'adam_classif_dropout']
 
     for i, model in enumerate(methods):
         with np.load('models/model_%s.npz' % model) as f:
@@ -34,7 +34,7 @@ def main():
 
         test_prediction = lasagne.layers.get_output(network, deterministic=True)
         
-        accuracy = (lasagne.layers.get_output(network, X_test).eval().argmax(axis=1) == y_test).mean()
+        accuracy = (lasagne.layers.get_output(network, X_test, deterministic=True).eval().argmax(axis=1) == y_test).mean()
         print "Model: {}; accuracy: {}".format(model, accuracy)
 
 main()

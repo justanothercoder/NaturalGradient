@@ -12,7 +12,10 @@ from SVRGOptimizer import SVRGOptimizer
 def classifier_network(input_var, n_input, n_hidden, n_output):
 
     input_layer  = lasagne.layers.InputLayer(shape=(None, n_input), input_var=input_var)
-    hidden_layer = lasagne.layers.DenseLayer(input_layer, num_units=n_hidden, nonlinearity=lasagne.nonlinearities.sigmoid)
+    hidden_layer = lasagne.layers.DenseLayer(
+            lasagne.layers.dropout(input_layer, p=0.5), 
+            num_units=n_hidden, 
+            nonlinearity=lasagne.nonlinearities.sigmoid)
     output_layer = lasagne.layers.DenseLayer(hidden_layer, num_units=n_output, nonlinearity=lasagne.nonlinearities.softmax)
 
     return input_layer, hidden_layer, output_layer
