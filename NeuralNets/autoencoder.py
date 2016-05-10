@@ -6,7 +6,7 @@ import theano.tensor as T
 import lasagne
 
 from neuralnet import train
-from custom_updates import custom_svrg
+#from custom_updates import custom_svrg
 
 from SVRGOptimizer import SVRGOptimizer
 
