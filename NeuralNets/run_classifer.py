@@ -21,13 +21,11 @@ def main():
     input_var = T.matrix('inputs')
     target_var = T.ivector('targets')
 
-    n_hidden = 300
+    n_hiddens = [300, 300, 500]
+    methods = ['adam_classif', 'adam_classif_dropout', 'adam_classif_on_sparse']
 
-    network = NeuralClassifier(784, n_hidden, 10).output_layer
-
-    methods = ['adam_classif', 'adam_classif_dropout']
-
-    for i, model in enumerate(methods):
+    for (i, model), n_hidden in zip(enumerate(methods), n_hiddens):
+        network = NeuralClassifier(784, n_hidden, 10).output_layer
         with np.load('models/model_%s.npz' % model) as f:
             param_values = [f['arr_%d' % j] for j in range(len(f.files))]
             lasagne.layers.set_all_param_values(network, param_values)
