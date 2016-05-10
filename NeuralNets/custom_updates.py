@@ -172,7 +172,7 @@ def custom_svrg2(loss, params, m, learning_rate=0.01, objective=None, data=None,
 
     return updates
 
-def custom_svrg(loss, params, m=100, learning_rate=0.01):
+def custom_svrg1(loss, params, m=100, learning_rate=0.01):
     
     grads = theano.grad(loss, params)
 
@@ -200,3 +200,34 @@ def custom_svrg(loss, params, m=100, learning_rate=0.01):
     updates[it_num] = theano.ifelse.ifelse(T.eq(it, m), np.cast['int16'](1), np.cast['int16'](m))
 
     return updates
+
+#def custom_svrg(loss, params, m=100, learning_rate=0.01):
+#    
+#    params_tilde = [theano.shared(x.get_value()) for x in params] 
+#    loss_tilde = theano.clone(loss, replace=zip(params, params_tilde))
+#
+#    grads = theano.grad(loss, params)
+#    grads_tilde = theano.grad(loss_tilde, params_tilde)
+#
+#    updates = OrderedDict()
+#    
+#    it_num = theano.shared(np.cast['int16'](0.))
+#    it = it_num + 1
+#
+#    for param, grad, param_tilde, grad_tilde in zip(params, grads, params_tilde, grads_tilde):
+#        value = param.get_value(borrow=True)
+#
+#        mu = theano.shared(np.zeros(value.shape, dtype=value.dtype), broadcastable=param.broadcastable)
+#        mu_acc = theano.shared(np.zeros(value.shape, dtype=value.dtype), broadcastable=param.broadcastable)
+#
+#        new_param = param - learning_rate * (grad - grad_tilde + mu)
+#
+#        updates[param] = new_param
+#        updates[param_tilde] = theano.ifelse.ifelse(T.eq(it, m), new_param, param_tilde)
+#
+#        updates[mu] = theano.ifelse.ifelse(T.eq(it, m), mu_acc, mu)
+#        updates[mu_acc] = theano.ifelse.ifelse(T.eq(it, m), 0*mu_acc, mu_acc + grad)
+#
+#    updates[it_num] = theano.ifelse.ifelse(T.eq(it, m), np.cast['int16'](1), it)
+#
+#    return updates

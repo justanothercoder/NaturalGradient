@@ -24,7 +24,7 @@ def build(input_var=None, n_hidden=200):
     output_layer = lasagne.layers.DenseLayer(hidden_layer, num_units=784, nonlinearity=lasagne.nonlinearities.sigmoid)
     return output_layer
 
-def train(X_train, Y_train, X_val, Y_val, train_fn, val_fn, n_epochs, batch_size=500, verbose=True):
+def train(X_train, Y_train, X_val, Y_val, train_fn, val_fn, n_epochs, batch_size=500, verbose=True, toprint=None):
     train_error = []
     validation_error = []
 
@@ -42,7 +42,10 @@ def train(X_train, Y_train, X_val, Y_val, train_fn, val_fn, n_epochs, batch_size
             train_err += train_fn(inputs, targets)
             train_batches += 1
 
-        train_error.append(train_err)
+            if toprint is not None:
+                print toprint.get_value()
+
+        train_error.append(train_err / train_batches)
 
         if X_val is not None:
             val_err = 0
@@ -54,7 +57,7 @@ def train(X_train, Y_train, X_val, Y_val, train_fn, val_fn, n_epochs, batch_size
                 val_err += err
                 val_batches += 1
        
-            validation_error.append(val_err)
+            validation_error.append(val_err / val_batches)
 
         if verbose:
             print("Epoch {} of {} took {:.3f}s".format(epoch + 1, n_epochs, time.time() - t))

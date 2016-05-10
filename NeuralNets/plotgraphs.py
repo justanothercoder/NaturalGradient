@@ -66,12 +66,23 @@ params = [
 #]
 
 #params = [
+#
 #    'custom_adam_0.01_0.9_0.999',
 #    'custom_adagrad_0.1',
 #    'custom_rmsprop_0.01-0.9',
 #    'custom_momentum-1.0divk**0.5-0.9',
 #    'custom_momentum-1.0-0.9',
 #]
+
+params = [
+#    'svrg_100.0m_300',
+#    'momentum_1.0_0.9_300',
+#    'adam_0.01_300',
+#    'svrg_test',
+#    'adam_test',
+    'svrg_test_100',
+    'adam_test_100',
+]
 
 plot(params)
 

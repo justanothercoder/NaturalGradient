@@ -43,7 +43,7 @@ def main():
 #    methods = ['adam_deep_test_batch_norm']
 #    methods = ['adam_deep_0.01']
 #    methods = ['adam_sparse_7.0_not_denoising']
-    methods = ['svrg_100.0']
+    methods = ['svrg_100.0m_300']
 
     n_images = 10
     

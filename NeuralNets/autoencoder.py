@@ -8,6 +8,8 @@ import lasagne
 from neuralnet import train
 from custom_updates import custom_svrg
 
+from SVRGOptimizer import SVRGOptimizer
+
 def autoencoder_network(input_var, n_input, n_hidden, 
                         W=lasagne.init.GlorotUniform(), 
                         bhid=lasagne.init.Constant(0.), bvis=lasagne.init.Constant(0.)):
@@ -46,60 +48,37 @@ class DenoisingAutoEncoder:
         loss = loss.mean()
     
         params = lasagne.layers.get_all_params(network, trainable=True)
-        updates = update(loss, params, **update_params)
 
-        train_fn = theano.function([self.input_var, self.target_var], loss, updates=updates)
-    
-        if X_val is not None:
-            test_prediction = lasagne.layers.get_output(network, deterministic=True)
-            test_loss = objective(test_prediction, self.target_var)
-            test_loss = test_loss.mean()
-            val_fn = theano.function([self.input_var, self.target_var], test_loss)
-        else:
-            val_fn = None
+        svrg = False
+  #      svrg = True
         
-        train_error, validation_error = train(
-                np.array(X_train * np.random.binomial(size=X_train.shape, n=1, p=0.8), dtype=np.float32), X_train,
-                X_val, X_val,
-                train_fn, val_fn,
-                n_epochs,
-                batch_size=batch_size
-        )
+        if svrg:
+            optimizer = SVRGOptimizer(update_params['m'], update_params['learning_rate'])
+            train_error, validation_error = optimizer.minimize(loss, params, 
+                    np.array(X_train * np.random.binomial(size=X_train.shape, n=1, p=0.8), dtype=np.float32), X_train, 
+                    self.input_var, self.target_var, X_val, X_val, n_epochs=n_epochs)
+        else:
+            updates = update(loss, params, **update_params)
+
+            train_fn = theano.function([self.input_var, self.target_var], loss, updates=updates)
+        
+            if X_val is not None:
+                test_prediction = lasagne.layers.get_output(network, deterministic=True)
+                test_loss = objective(test_prediction, self.target_var)
+                test_loss = test_loss.mean()
+                val_fn = theano.function([self.input_var, self.target_var], test_loss)
+            else:
+                val_fn = None
+            
+            train_error, validation_error = train(
+                    np.array(X_train * np.random.binomial(size=X_train.shape, n=1, p=0.8), dtype=np.float32), X_train,
+                    X_val, X_val,
+                    train_fn, val_fn,
+                    n_epochs,
+                    batch_size=batch_size#, toprint=it
+            )
 
         return train_error, validation_error
-
-    #def svrg_train(self, X_train, X_val=None, 
-    #        objective=lasagne.objectives.binary_crossentropy, lambd=1.0,
-    #        n_epochs=100, batch_size=500, m=None, **update_params):
-
-    #    network = self.output_layer
-
-    #    prediction = lasagne.layers.get_output(network)
-    #    loss = objective(prediction, self.target_var) + lambd * lasagne.regularization.regularize_layer_params(network, lasagne.regularization.l2)
-    #    loss = loss.mean()
-    #
-    #    params = lasagne.layers.get_all_params(network, trainable=True)
-    #    updates = custom_svrg(loss, params, m, **update_params)
-
-    #    train_fn = theano.function([self.input_var, self.target_var], loss, updates=updates)
-    #
-    #    if X_val is not None:
-    #        test_prediction = lasagne.layers.get_output(network, deterministic=True)
-    #        test_loss = objective(test_prediction, self.target_var)
-    #        test_loss = test_loss.mean()
-    #        val_fn = theano.function([self.input_var, self.target_var], test_loss)
-    #    else:
-    #        val_fn = None
-    #    
-    #    train_error, validation_error = train(
-    #            np.array(X_train * np.random.binomial(size=X_train.shape, n=1, p=0.7), dtype=np.float32), X_train,
-    #            X_val, X_val,
-    #            train_fn, val_fn,
-    #            n_epochs,
-    #            batch_size=batch_size
-    #    )
-
-    #    return train_error, validation_error
 
     def get_hidden(self, X):
         return lasagne.layers.get_output(self.hidden_layer, X).eval()

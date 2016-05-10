@@ -31,9 +31,9 @@ def main():
     #objective = lasagne.objectives.squared_error
 
     models = {
-    #    'svrg_100.0m_300': (custom_svrg, {'learning_rate': 100.0, 'm': 500})
-        'momentum_1.0_0.9_300': (custom_momentum, {'learning_rate': 1.0, 'momentum': 0.9}),
-        'adam_0.01_300': (custom_adam, {'learning_rate': 0.01}),        
+    #    'svrg_test_100': (custom_svrg, {'learning_rate': 100.0, 'm': 500})
+    #    'momentum_1.0_0.9_300': (custom_momentum, {'learning_rate': 1.0, 'momentum': 0.9}),
+        'adam_test_100': (custom_adam, {'learning_rate': 0.01}),        
     }
 
     for model in models.keys():

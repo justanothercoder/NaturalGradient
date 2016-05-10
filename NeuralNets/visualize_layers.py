@@ -7,7 +7,7 @@ import math
 #model = 'adam_reg_denoising100'
 
 #model = 'adam_sparse_7.0_not_denoising'
-model = 'svrg_100.0_squared_error'
+model = 'svrg_100.0m_300'
 
 with np.load('models/model_%s.npz' % model) as f:
     param_values = [f['arr_%d' % j] for j in range(len(f.files))]
