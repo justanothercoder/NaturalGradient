@@ -45,6 +45,14 @@ def load_cifar(f):
     fo = open(f, 'rb')
     d = cPickle.load(fo)
     fo.close()
-    print d
-    return d
+    
+    X_train, y_train = d['data'], np.array(d['labels'], dtype=np.int32)
+
+    X_train, X_val = X_train[:-1000], X_train[-1000:]
+    y_train, y_val = y_train[:-1000], y_train[-1000:]
+    
+    X_train, X_test = X_train[:-1000], X_train[-1000:]
+    y_train, y_test = y_train[:-1000], y_train[-1000:]
+    
+    return X_train, y_train, X_val, y_val, X_test, y_test
 

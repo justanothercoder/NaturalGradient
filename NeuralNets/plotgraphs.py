@@ -76,13 +76,11 @@ params = [
 
 params = [
 #    'svrg_100.0m_300',
-    'svrg_0.1',
 #    'momentum_1.0_0.9_300',
-    'adam_0.01_300',
-#    'svrg_test',
-#    'adam_test',
-#    'svrg_test_100',
-#    'adam_test_100',
+    'svrg_test',
+    'adam_test',
+    'svrg_test_100',
+    'adam_test_100',
 ]
 
 plot(params)

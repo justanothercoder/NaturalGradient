@@ -20,7 +20,7 @@ def main():
     input_var = T.matrix('inputs')
     target_var = T.matrix('targets')
 
-    n_hidden = 300
+    n_hidden = 500
 
 #    network = build(input_var, n_hidden=300)
 #    network = DeepAutoEncoder(784, [300, 2])
@@ -42,8 +42,8 @@ def main():
 #    methods = ['adam_deep_test_tied']
 #    methods = ['adam_deep_test_batch_norm']
 #    methods = ['adam_deep_0.01']
-#    methods = ['adam_sparse_7.0_not_denoising']
-    methods = ['svrg_100.0m_300']
+    methods = ['adam_sparse_5.0_not_denoising']
+#    methods = ['svrg_100.0m_300']
 
     n_images = 10
     
