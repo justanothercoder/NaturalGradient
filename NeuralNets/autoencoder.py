@@ -41,7 +41,7 @@ class DenoisingAutoEncoder:
 
         network = self.output_layer
 
-        prediction = lasagne.layers.get_output(network)
+        prediction = lasagne.layers.get_output(network, self.input_var)
 
         l2_reg = lasagne.regularization.regularize_layer_params(network, lasagne.regularization.l2)
         loss = objective(prediction, self.target_var) + lambd * l2_reg
@@ -49,14 +49,14 @@ class DenoisingAutoEncoder:
     
         params = lasagne.layers.get_all_params(network, trainable=True)
 
-        svrg = False
-  #      svrg = True
+ #       svrg = False
+        svrg = True
         
         if svrg:
             optimizer = SVRGOptimizer(update_params['m'], update_params['learning_rate'])
             train_error, validation_error = optimizer.minimize(loss, params, 
                     np.array(X_train * np.random.binomial(size=X_train.shape, n=1, p=0.8), dtype=np.float32), X_train, 
-                    self.input_var, self.target_var, X_val, X_val, n_epochs=n_epochs)
+                    self.input_var, self.target_var, X_val, X_val, n_epochs=n_epochs, batch_size=batch_size)
         else:
             updates = update(loss, params, **update_params)
 

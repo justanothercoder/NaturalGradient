@@ -17,7 +17,12 @@ def plot(params):
 #            style = '-'
         style = '-'
 
-        plt.plot(val_err, label=model, linestyle=style, color=colors[i])
+        if type(val_err[0]) == np.ndarray:
+            y, x = zip(*val_err)
+            print y
+            plt.plot(x, y, label=model, linestyle=style, color=colors[i])
+        else:
+            plt.plot(range(len(val_err)), val_err, label=model, linestyle=style, color=colors[i])
 
 #params = [
 #    'custom_momentum-1.0-0.9',
@@ -77,10 +82,13 @@ params = [
 params = [
 #    'svrg_100.0m_300',
 #    'momentum_1.0_0.9_300',
-    'svrg_test',
-    'adam_test',
-    'svrg_test_100',
-    'adam_test_100',
+ #   'svrg_test',
+#    'adam_test',
+    'svrg_test_faster100epochs',
+    'adam_test_faster100epochs',
+    'sdg_test'
+#    'svrg_test_100',
+#    'adam_test_100',
 ]
 
 plot(params)

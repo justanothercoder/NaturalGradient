@@ -15,9 +15,14 @@ class SVRGOptimizer:
         self.m = m
         self.learning_rate = learning_rate
 
-    def minimize(self, loss, params, X_train, Y_train, input_var, target_var, X_val, Y_val, n_epochs=100):
+        self.counted_gradient = theano.shared(0)
+
+    def minimize(self, loss, params, X_train, Y_train, input_var, target_var, X_val, Y_val, n_epochs=100, batch_size=500):
         self.input_var = input_var
         self.target_var = target_var
+
+        self.L = theano.shared(np.cast['float32'](1. / self.learning_rate))
+
         w_updates, mu_updates = self.make_updates(loss, params)
 
         train_mu = theano.function([self.input_var, self.target_var], loss, updates=mu_updates)
@@ -28,38 +33,50 @@ class SVRGOptimizer:
         train_error = []
         validation_error = []
 
-        batch_size = 500
         num_batches = X_train.shape[0] / batch_size
         n = num_batches
+
+        print "NUMBATCHES: ", n
+
+        j = 0
+
+        L_fn = self.make_L_fn(loss, params)
 
         print("Starting training...")
         for epoch in range(n_epochs):
 
             t = time.time()
-            
-            for mu in self.mu:
-                mu.set_value(0 * mu.get_value())
 
-            for batch in iterate_minibatches(X_train, Y_train, batch_size, shuffle=True):
-                inputs, targets = batch
-                train_mu(inputs, targets)
-            
-            for mu in self.mu:
-                mu.set_value(mu.get_value() / n)
-            
             train_err = 0
             train_batches = 0
 
-            j = 0
-            while j < self.m:
-                for batch in iterate_minibatches(X_train, Y_train, batch_size, shuffle=True):
-#                    print "Iter: ", self.it_num.get_value()
-                    if j >= self.m:
+            for batch in iterate_minibatches(X_train, Y_train, batch_size, shuffle=True):
+#                print j
+                if j % self.m == 0:
+                    for mu in self.mu:
+                        mu.set_value(0 * mu.get_value())
+
+                    for mu_batch in iterate_minibatches(X_train, Y_train, batch_size, shuffle=False):
+                        inputs, targets = mu_batch
+                        train_mu(inputs, targets)
+                    
+                    for mu in self.mu:
+                        mu.set_value(mu.get_value() / n)
+
+                j += 1               
+                inputs, targets = batch
+
+                current_loss = val_fn(inputs, targets)
+                while True:
+                    loss_next, sq_sum = L_fn(inputs, targets)
+                    if loss_next <= current_loss - 0.5 * sq_sum / self.L.get_value():
                         break
-                    j += 1
-                    inputs, targets = batch
-                    train_err += train_w(inputs, targets)
-                    train_batches += 1
+                    else:
+                        self.L.set_value(self.L.get_value() * 2)
+
+                train_err += train_w(inputs, targets)
+                self.L.set_value(self.L.get_value() / 2)
+                train_batches += 1
             
             val_err = 0
             val_batches = 0
@@ -73,7 +90,7 @@ class SVRGOptimizer:
             print("  validation loss:\t\t{:.6f}".format(val_err / val_batches))
 
             train_error.append(train_err / train_batches)
-            validation_error.append(val_err / val_batches)
+            validation_error.append((val_err / val_batches, self.counted_gradient.get_value()))
 #            if X_val is not None:
 #                print("  validation loss:\t\t{:.6f}".format(val_err / val_batches))
 
@@ -95,6 +112,8 @@ class SVRGOptimizer:
         for param, grad in zip(params, grads):
             value = param.get_value(borrow=True)
 
+            mu_updates[self.counted_gradient] = self.counted_gradient + 1
+
             mu = theano.shared(np.zeros(value.shape, dtype=value.dtype), broadcastable=param.broadcastable)
             mu_updates[mu] = mu + grad
             self.mu.append(mu)
@@ -114,11 +133,24 @@ class SVRGOptimizer:
         it = it_num + 1
 
         for param, grad, mu, param_tilde, grad_tilde in zip(params, grads, self.mu, params_tilde, grads_tilde):
-            new_param = param - self.learning_rate * (grad - grad_tilde + mu)
+#            new_param = param - self.learning_rate * (grad - grad_tilde + mu)
+
+            new_param = param - (1. / self.L) * (grad - grad_tilde + mu)
             w_updates[param] = new_param
-            w_updates[param_tilde] = ifelse(T.eq(it, self.m), new_param, param_tilde)
+            w_updates[param_tilde] = ifelse(T.eq(it % self.m, 0), new_param, param_tilde)
+            
+            w_updates[self.counted_gradient] = self.counted_gradient + 2
 
         self.it_num = it_num
         
-        w_updates[it_num] = ifelse(T.eq(it, self.m), np.cast['int16'](0), it)
+        w_updates[it_num] = it
         return w_updates
+
+    def make_L_fn(self, loss, params):
+        grads = theano.grad(loss, params)
+
+        params_next = [x - 1. / self.L * g for x, g in zip(params, grads)]
+        loss_next = theano.clone(loss, replace=zip(params, params_next))
+        sq_sum = sum((g**2).sum() for g in grads)
+
+        return theano.function([self.input_var, self.target_var], [loss_next, sq_sum])

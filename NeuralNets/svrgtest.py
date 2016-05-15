@@ -9,9 +9,7 @@ import lasagne
 import matplotlib.pyplot as plt
 import seaborn
 
-from neuralnet import get_network_stats
 from custom_updates import *
-import custom_objectives
 
 from load_dataset import *
 
@@ -31,10 +29,10 @@ def main():
     #objective = lasagne.objectives.squared_error
 
     models = {
-    #    'svrg_test_100': (custom_svrg, {'learning_rate': 100.0, 'm': 500})
+    #    'sdg_test': (custom_momentum, {'learning_rate': 10.0, 'momentum': 0.9}),
+        'svrg_testing': (custom_svrg1, {'learning_rate': 128.0, 'm': 500})
     #    'momentum_1.0_0.9_300': (custom_momentum, {'learning_rate': 1.0, 'momentum': 0.9}),
-    #    'adam_test_100': (custom_adam, {'learning_rate': 0.01}),        
-        'svrg_wrong': (custom_svrg1, {'learning_rate': 100.0, 'm': 500})
+    #    'adam_test_faster100epochs': (custom_adam, {'learning_rate': 0.01}),
     }
 
     for model in models.keys():
@@ -45,7 +43,11 @@ def main():
         train_err, val_err = network.train(X_train, X_val, n_epochs=n_epochs, batch_size=500, lambd=0.0,
                                            objective=objective, update=update, **update_params)
 
-        plt.plot(val_err, label=model)
+        if type(val_err[0]) == tuple:
+            x, y = zip(*val_err)
+            plt.plot(y, x, label=model)
+        else:
+            plt.plot(val_err, label=model)
     
         np.savez('models/model_%s.npz' % model, *lasagne.layers.get_all_param_values(network.output_layer))
         np.savez('models/model_%s_val_error.npz' % model, val_err)

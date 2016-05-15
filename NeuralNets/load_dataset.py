@@ -9,7 +9,7 @@ def load_dataset():
 
     def download(filename, source='http://yann.lecun.com/exdb/mnist/'):
         print("Downloading %s" % filename)
-        urlretrieve(source + filename, filename)
+        urlretrieve(source + filename, 'mnist/' + filename)
 
     import gzip
 
@@ -48,6 +48,8 @@ def load_cifar(f):
     
     X_train, y_train = d['data'], np.array(d['labels'], dtype=np.int32)
 
+    X_train = X_train.reshape(-1, 3, 32, 32)
+
     X_train, X_val = X_train[:-1000], X_train[-1000:]
     y_train, y_val = y_train[:-1000], y_train[-1000:]
     
@@ -55,4 +57,3 @@ def load_cifar(f):
     y_train, y_test = y_train[:-1000], y_train[-1000:]
     
     return X_train, y_train, X_val, y_val, X_test, y_test
-

@@ -9,7 +9,6 @@ import lasagne
 import matplotlib.pyplot as plt
 import seaborn
 
-from neuralnet import get_network_stats
 from custom_updates import *
 
 from load_dataset import *

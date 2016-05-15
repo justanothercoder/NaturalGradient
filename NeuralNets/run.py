@@ -8,7 +8,6 @@ import theano.tensor as T
 import lasagne
 
 from load_dataset import *
-from neuralnet import build
 
 from deep import DeepAutoEncoder
 from sparse_autoencoder import SparseAutoEncoder
@@ -22,7 +21,6 @@ def main():
 
     n_hidden = 500
 
-#    network = build(input_var, n_hidden=300)
 #    network = DeepAutoEncoder(784, [300, 2])
 #    network.finish_network()
 #    network = network.output_layer
