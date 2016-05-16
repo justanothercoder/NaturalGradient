@@ -30,7 +30,7 @@ def main():
 
     models = {
     #    'sdg_test_long_nomomentum': (custom_momentum, {'learning_rate': 10.0, 'momentum': 0.0}),
-        'svrg_testing_nonadaptive': (custom_svrg1, {'learning_rate': 128.0, 'm': 500, 'adaptive': False})
+        'svrg_testing_nonadaptive_withprob': (custom_svrg1, {'learning_rate': 128.0, 'm': 500, 'adaptive': False})
     #    'momentum_1.0_0.9_300': (custom_momentum, {'learning_rate': 1.0, 'momentum': 0.9}),
     #    'adam_test_faster100epochs': (custom_adam, {'learning_rate': 0.01}),
     }

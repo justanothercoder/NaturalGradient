@@ -88,9 +88,10 @@ params = [
     'adam_test_faster100epochs',
     'sdg_test',
     'sdg_test_long',
-    'sdg_test_long_nomomentum',
+#    'sdg_test_long_nomomentum',
     'svrg_testing',
     'svrg_testing_nonadaptive',
+    'svrg_testing_nonadaptive_withprob',
 #    'svrg_test_100',
 #    'adam_test_100',
 ]

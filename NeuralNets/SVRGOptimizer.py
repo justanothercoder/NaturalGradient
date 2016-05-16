@@ -11,18 +11,24 @@ from collections import OrderedDict
 import time
 
 class SVRGOptimizer:
-    def __init__(self, m, learning_rate, adaptive=True):
+    def __init__(self, m, learning_rate, adaptive=True, non_uniform_prob=True):
         self.m = m
         self.learning_rate = learning_rate
         self.adaptive = adaptive
+        self.non_uniform_prob = non_uniform_prob
 
         self.counted_gradient = theano.shared(0)
 
     def minimize(self, loss, params, X_train, Y_train, input_var, target_var, X_val, Y_val, n_epochs=100, batch_size=500):
         self.input_var = input_var
         self.target_var = target_var
+        
+        num_batches = X_train.shape[0] / batch_size
+        n = num_batches
 
         self.L = theano.shared(np.cast['float32'](1. / self.learning_rate))
+#        self.Ls = [theano.shared(np.cast['float32'](1. / self.learning_rate)) for _  in range(num_batches)]
+        self.Ls = [1. / self.learning_rate for _  in range(num_batches)]
 
         w_updates, mu_updates = self.make_updates(loss, params)
 
@@ -33,9 +39,6 @@ class SVRGOptimizer:
 
         train_error = []
         validation_error = []
-
-        num_batches = X_train.shape[0] / batch_size
-        n = num_batches
 
         print "NUMBATCHES: ", n
 
@@ -51,7 +54,11 @@ class SVRGOptimizer:
             train_err = 0
             train_batches = 0
 
-            for batch in iterate_minibatches(X_train, Y_train, batch_size, shuffle=True):
+            if self.non_uniform_prob:
+                batches = self.iterate_minibatches(X_train, Y_train, batch_size)
+            else:
+                batches = iterate_minibatches(X_train, Y_train, batch_size, shuffle=True)
+            for batch in batches:
                 if j % self.m == 0:
                     for mu in self.mu:
                         mu.set_value(0 * mu.get_value())
@@ -67,6 +74,9 @@ class SVRGOptimizer:
                 j += 1               
                 inputs, targets = batch
                 #print "learning_rate: ", 1. / self.L.get_value()
+
+                L = self.Ls[self.idx]
+                self.L.set_value(L)
                 
                 current_loss = val_fn(inputs, targets)
 #                current_loss = val_fn(np.array(inputs.todense(), dtype=np.float32), np.array(targets, dtype=np.int32))
@@ -87,8 +97,8 @@ class SVRGOptimizer:
                         l_iter += 1
 
                 train_err += train_w(inputs, targets)
+                self.Ls[self.idx] = self.L.get_value()
 #                train_err += train_w(np.array(inputs.todense(), dtype=np.float32), np.array(targets, dtype=np.int32))
-#                self.L.set_value(self.L.get_value() / 2)
                 train_batches += 1
             
             val_err = 0
@@ -171,3 +181,22 @@ class SVRGOptimizer:
         sq_sum = sum((g**2).sum() for g in grads)
 
         return theano.function([self.input_var, self.target_var], [loss_next, sq_sum])
+
+    def iterate_minibatches(self, inputs, targets, batchsize):
+        assert inputs.shape[0] == len(targets)
+        
+        indices = np.arange(inputs.shape[0] / batchsize)
+        
+        lipschitz_prob = self.get_prob()
+
+        for start_idx in range(0, inputs.shape[0] - batchsize + 1, batchsize):
+            [idx] = np.random.choice(indices, size=1, p=lipschitz_prob)
+            excerpt = np.arange(inputs.shape[0])[idx * batchsize : (idx + 1) * batchsize]
+            self.idx = idx
+            yield inputs[excerpt], targets[excerpt]
+
+    def get_prob(self):
+#        s = sum(L.get_value() for L in self.Ls)
+#        return [L.get_value() / s for L in self.Ls]
+        s = sum(self.Ls)
+        return [L / s for L in self.Ls]
