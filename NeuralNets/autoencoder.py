@@ -52,7 +52,7 @@ class DenoisingAutoEncoder:
         svrg = (update == custom_svrg1)
         
         if svrg:
-            optimizer = SVRGOptimizer(update_params['m'], update_params['learning_rate'])
+            optimizer = SVRGOptimizer(update_params['m'], update_params['learning_rate'], update_params.get('adaptive', True))
             train_error, validation_error = optimizer.minimize(loss, params, 
                     np.array(X_train * np.random.binomial(size=X_train.shape, n=1, p=0.8), dtype=np.float32), X_train, 
                     self.input_var, self.target_var, X_val, X_val, n_epochs=n_epochs, batch_size=batch_size)

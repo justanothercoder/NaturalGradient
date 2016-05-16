@@ -89,7 +89,8 @@ params = [
     'sdg_test',
     'sdg_test_long',
     'sdg_test_long_nomomentum',
-    'svrg_testing'
+    'svrg_testing',
+    'svrg_testing_nonadaptive',
 #    'svrg_test_100',
 #    'adam_test_100',
 ]

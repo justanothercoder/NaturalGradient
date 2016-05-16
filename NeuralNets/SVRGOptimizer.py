@@ -11,9 +11,10 @@ from collections import OrderedDict
 import time
 
 class SVRGOptimizer:
-    def __init__(self, m, learning_rate):
+    def __init__(self, m, learning_rate, adaptive=True):
         self.m = m
         self.learning_rate = learning_rate
+        self.adaptive = adaptive
 
         self.counted_gradient = theano.shared(0)
 
@@ -70,19 +71,20 @@ class SVRGOptimizer:
                 current_loss = val_fn(inputs, targets)
 #                current_loss = val_fn(np.array(inputs.todense(), dtype=np.float32), np.array(targets, dtype=np.int32))
 
-                l_iter = 0
-                while True:
+                if self.adaptive: 
+                    l_iter = 0
+                    while True:
 
 #                    print "learning_rate: ", 1. / self.L.get_value()
 
-                    loss_next, sq_sum = L_fn(inputs, targets)
- #                   loss_next, sq_sum = L_fn(np.array(inputs.todense(), dtype=np.float32), np.array(targets, dtype=np.int32))
-                    if loss_next <= current_loss - 0.5 * sq_sum / self.L.get_value():
-                        break
-                    else:
-                        self.L.set_value(self.L.get_value() * 2)
+                        loss_next, sq_sum = L_fn(inputs, targets)
+     #                   loss_next, sq_sum = L_fn(np.array(inputs.todense(), dtype=np.float32), np.array(targets, dtype=np.int32))
+                        if loss_next <= current_loss - 0.5 * sq_sum / self.L.get_value():
+                            break
+                        else:
+                            self.L.set_value(self.L.get_value() * 2)
 
-                    l_iter += 1
+                        l_iter += 1
 
                 train_err += train_w(inputs, targets)
 #                train_err += train_w(np.array(inputs.todense(), dtype=np.float32), np.array(targets, dtype=np.int32))
@@ -153,7 +155,8 @@ class SVRGOptimizer:
             
             w_updates[self.counted_gradient] = self.counted_gradient + 2
         
-        w_updates[self.L] = self.L / 2
+        if self.adaptive:
+            w_updates[self.L] = self.L / 2
 
         self.it_num = it_num
         
