@@ -6,7 +6,7 @@ import theano.tensor as T
 import lasagne
 
 from neuralnet import train
-#from custom_updates import custom_svrg
+from custom_updates import *
 
 from SVRGOptimizer import SVRGOptimizer
 
@@ -49,8 +49,7 @@ class DenoisingAutoEncoder:
     
         params = lasagne.layers.get_all_params(network, trainable=True)
 
- #       svrg = False
-        svrg = True
+        svrg = (update == custom_svrg1)
         
         if svrg:
             optimizer = SVRGOptimizer(update_params['m'], update_params['learning_rate'])

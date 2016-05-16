@@ -51,7 +51,6 @@ class SVRGOptimizer:
             train_batches = 0
 
             for batch in iterate_minibatches(X_train, Y_train, batch_size, shuffle=True):
-#                print j
                 if j % self.m == 0:
                     for mu in self.mu:
                         mu.set_value(0 * mu.get_value())
@@ -59,23 +58,35 @@ class SVRGOptimizer:
                     for mu_batch in iterate_minibatches(X_train, Y_train, batch_size, shuffle=False):
                         inputs, targets = mu_batch
                         train_mu(inputs, targets)
+#                        train_mu(np.array(inputs.todense(), dtype=np.float32), np.array(targets, dtype=np.int32))
                     
                     for mu in self.mu:
                         mu.set_value(mu.get_value() / n)
 
                 j += 1               
                 inputs, targets = batch
-
+                #print "learning_rate: ", 1. / self.L.get_value()
+                
                 current_loss = val_fn(inputs, targets)
+#                current_loss = val_fn(np.array(inputs.todense(), dtype=np.float32), np.array(targets, dtype=np.int32))
+
+                l_iter = 0
                 while True:
+
+#                    print "learning_rate: ", 1. / self.L.get_value()
+
                     loss_next, sq_sum = L_fn(inputs, targets)
+ #                   loss_next, sq_sum = L_fn(np.array(inputs.todense(), dtype=np.float32), np.array(targets, dtype=np.int32))
                     if loss_next <= current_loss - 0.5 * sq_sum / self.L.get_value():
                         break
                     else:
                         self.L.set_value(self.L.get_value() * 2)
 
+                    l_iter += 1
+
                 train_err += train_w(inputs, targets)
-                self.L.set_value(self.L.get_value() / 2)
+#                train_err += train_w(np.array(inputs.todense(), dtype=np.float32), np.array(targets, dtype=np.int32))
+#                self.L.set_value(self.L.get_value() / 2)
                 train_batches += 1
             
             val_err = 0
@@ -83,6 +94,7 @@ class SVRGOptimizer:
             for i, batch in enumerate(iterate_minibatches(X_val, Y_val, batch_size, shuffle=True)):
                 inputs, targets = batch
                 val_err += val_fn(inputs, targets)
+#                val_err += val_fn(np.array(inputs.todense(), dtype=np.float32), np.array(targets, dtype=np.int32))
                 val_batches += 1
 
             print("Epoch {} of {} took {:.3f}s".format(epoch + 1, n_epochs, time.time() - t))
@@ -140,6 +152,8 @@ class SVRGOptimizer:
             w_updates[param_tilde] = ifelse(T.eq(it % self.m, 0), new_param, param_tilde)
             
             w_updates[self.counted_gradient] = self.counted_gradient + 2
+        
+        w_updates[self.L] = self.L / 2
 
         self.it_num = it_num
         

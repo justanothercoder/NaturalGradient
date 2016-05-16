@@ -25,7 +25,9 @@ def main():
     objective = lasagne.objectives.categorical_crossentropy
 
     models = {
-        'adam_classif_dropout': (lasagne.updates.adam, {'learning_rate': 0.01})
+        'svrg_classif': (custom_svrg1, {'learning_rate': 1.0, 'm': 200})
+        #'adam_classif': (custom_adam, {'learning_rate': 0.01})
+#        'adam_classif_dropout': (lasagne.updates.adam, {'learning_rate': 0.01})
     }
 
     for model in models.keys():
@@ -37,7 +39,11 @@ def main():
                                            n_epochs=n_epochs, lambd=0.0,
                                            objective=objective, update=update, **update_params)
 
-        plt.plot(val_err, label=model)
+        if type(val_err[0]) == tuple:
+            y, x = zip(*val_err)
+            plt.plot(x, y, label=model)
+        else:
+            plt.plot(val_err, label=model)
     
         np.savez('models/model_%s.npz' % model, *lasagne.layers.get_all_param_values(network.output_layer))
         np.savez('models/model_%s_val_error.npz' % model, val_err)

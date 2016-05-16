@@ -231,3 +231,11 @@ def custom_svrg1(loss, params, m=100, learning_rate=0.01):
 #    updates[it_num] = theano.ifelse.ifelse(T.eq(it, m), np.cast['int16'](1), it)
 #
 #    return updates
+
+def apply_svrg(updates, params, m):
+
+    it_num = theano.shared(np.cast['int32'](0.))
+
+    theano.scan
+
+    updates[it_num] = it_num + 1

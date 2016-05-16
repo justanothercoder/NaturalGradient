@@ -1,6 +1,9 @@
 import sys, os
 import numpy as np
 
+from sklearn.datasets import fetch_20newsgroups
+from sklearn.feature_extraction.text import TfidfVectorizer
+
 def load_dataset():
     if sys.version_info[0] == 2:
         from urllib import urlretrieve
@@ -14,17 +17,17 @@ def load_dataset():
     import gzip
 
     def load_mnist_images(filename):
-        if not os.path.exists(filename):
+        if not os.path.exists('mnist/' + filename):
             download(filename)
-        with gzip.open(filename, 'rb') as f:
+        with gzip.open('mnist/' + filename, 'rb') as f:
             data = np.frombuffer(f.read(), np.uint8, offset=16)
         data = data.reshape(-1, 784)
         return data / np.float32(256)
 
     def load_mnist_labels(filename):
-        if not os.path.exists(filename):
+        if not os.path.exists('mnist/' + filename):
             download(filename)
-        with gzip.open(filename, 'rb') as f:
+        with gzip.open('mnist/' + filename, 'rb') as f:
             data = np.frombuffer(f.read(), np.uint8, offset=8)
         return data
 
@@ -56,4 +59,22 @@ def load_cifar(f):
     X_train, X_test = X_train[:-1000], X_train[-1000:]
     y_train, y_test = y_train[:-1000], y_train[-1000:]
     
+    return X_train, y_train, X_val, y_val, X_test, y_test
+
+
+def load_20news():
+    newsgroups_train = fetch_20newsgroups(subset='train', remove=('headers', 'footers', 'quotes'))
+    newsgroups_test = fetch_20newsgroups(subset='test', remove=('headers', 'footers', 'quotes'))
+
+    vectorizer = TfidfVectorizer()
+
+    X_train = vectorizer.fit_transform(newsgroups_train.data)
+    X_test = vectorizer.transform(newsgroups_test.data)
+
+    y_train = newsgroups_train.target
+    y_test = newsgroups_test.target
+    
+    X_train, X_val = X_train[:-1000], X_train[-1000:]
+    y_train, y_val = y_train[:-1000], y_train[-1000:]
+
     return X_train, y_train, X_val, y_val, X_test, y_test

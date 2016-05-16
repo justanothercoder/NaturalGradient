@@ -86,10 +86,19 @@ params = [
 #    'adam_test',
     'svrg_test_faster100epochs',
     'adam_test_faster100epochs',
-    'sdg_test'
+    'sdg_test',
+    'sdg_test_long',
+    'sdg_test_long_nomomentum',
+    'svrg_testing'
 #    'svrg_test_100',
 #    'adam_test_100',
 ]
+
+#params = [
+#    'svrg_news_data',
+#    'adam_news_data',
+#    'sgdm_news_data'
+#]
 
 plot(params)
 

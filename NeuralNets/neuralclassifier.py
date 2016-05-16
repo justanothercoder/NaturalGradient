@@ -7,13 +7,14 @@ import lasagne
 
 from neuralnet import train
 
+from custom_updates import *
 from SVRGOptimizer import SVRGOptimizer
 
 def classifier_network(input_var, n_input, n_hidden, n_output):
 
     input_layer  = lasagne.layers.InputLayer(shape=(None, n_input), input_var=input_var)
     hidden_layer = lasagne.layers.DenseLayer(
-            lasagne.layers.dropout(input_layer, p=0.5), 
+            input_layer, #            lasagne.layers.dropout(input_layer, p=0.5), 
             num_units=n_hidden, 
             nonlinearity=lasagne.nonlinearities.sigmoid)
     output_layer = lasagne.layers.DenseLayer(hidden_layer, num_units=n_output, nonlinearity=lasagne.nonlinearities.softmax)
@@ -47,16 +48,17 @@ class NeuralClassifier:
     
         params = lasagne.layers.get_all_params(network, trainable=True)
 
-        svrg = False
-  #      svrg = True
-        
+ #       svrg = False
+ #       svrg = True
+        svrg = (update == custom_svrg1)
+    
         if svrg:
             optimizer = SVRGOptimizer(update_params['m'], update_params['learning_rate'])
             train_error, validation_error = optimizer.minimize(loss, params, 
                     X_train, Y_train, 
                     self.input_var, self.target_var, 
                     X_val, Y_val, 
-                    n_epochs=n_epochs)
+                    n_epochs=n_epochs, batch_size=batch_size)
         else:
             updates = update(loss, params, **update_params)
 

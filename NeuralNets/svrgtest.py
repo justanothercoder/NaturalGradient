@@ -22,15 +22,15 @@ def main():
 
     X_train = X_train[:]
 
-    n_epochs = 100
+    n_epochs = 250
     n_hidden = 300
 
     objective = lasagne.objectives.binary_crossentropy
     #objective = lasagne.objectives.squared_error
 
     models = {
-    #    'sdg_test': (custom_momentum, {'learning_rate': 10.0, 'momentum': 0.9}),
-        'svrg_testing': (custom_svrg1, {'learning_rate': 128.0, 'm': 500})
+        'sdg_test_long_nomomentum': (custom_momentum, {'learning_rate': 10.0, 'momentum': 0.0}),
+    #    'svrg_testing': (custom_svrg1, {'learning_rate': 128.0, 'm': 500})
     #    'momentum_1.0_0.9_300': (custom_momentum, {'learning_rate': 1.0, 'momentum': 0.9}),
     #    'adam_test_faster100epochs': (custom_adam, {'learning_rate': 0.01}),
     }
