@@ -12,3 +12,7 @@
     * Classifier on top of deep network +
     * Sparse autoencoder +
     * Try another dataset (like CIFAR-10)
+
+    * Adaptive Lipschitz constant +
+    * Proportionate probabilities +
+    * Second-order information in SVRG
